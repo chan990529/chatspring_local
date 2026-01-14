@@ -14,6 +14,9 @@ const RealTrade = () => {
     const [selectedStockName, setSelectedStockName] = useState('');
     // 현재 로그인한 유저의 닉네임 저장용 state
     const [currentUserNickname, setCurrentUserNickname] = useState('');
+    // 상세보기 모달 관련 state
+    const [detailModalOpen, setDetailModalOpen] = useState(false);
+    const [selectedTrade, setSelectedTrade] = useState(null);
 
     // 로그인 상태 확인
     useEffect(() => {
@@ -323,6 +326,19 @@ const RealTrade = () => {
         setSelectedStockName('');
     };
 
+    // 상세보기 모달 열기 함수
+    const handleViewDetails = (e, trade) => {
+        e.stopPropagation(); // 행 클릭 이벤트 방지
+        setSelectedTrade(trade);
+        setDetailModalOpen(true);
+    };
+
+    // 상세보기 모달 닫기 함수
+    const handleCloseDetailModal = () => {
+        setDetailModalOpen(false);
+        setSelectedTrade(null);
+    };
+
     if (loading) {
         return (
             <div className="content">
@@ -383,6 +399,7 @@ const RealTrade = () => {
                                 <th>매수 횟수</th>
                                 <th>참여자</th>
                                 <th>상태</th>
+                                <th>상세보기</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -477,6 +494,34 @@ const RealTrade = () => {
                                         }}>
                                             {trade.status === 'ACTIVE' ? '진행중' : trade.status === 'PAUSED' ? '중단' : trade.status === 'COMPLETED' ? '완료' : trade.status}
                                         </span>
+                                    </td>
+                                    <td 
+                                        style={{ 
+                                            position: 'relative'
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <button
+                                            onClick={(e) => handleViewDetails(e, trade)}
+                                            style={{
+                                                padding: '4px 12px',
+                                                backgroundColor: 'rgba(100, 149, 237, 0.3)',
+                                                color: '#fff',
+                                                border: '1px solid rgba(100, 149, 237, 0.5)',
+                                                borderRadius: '4px',
+                                                cursor: 'pointer',
+                                                fontSize: '12px',
+                                                transition: 'background-color 0.2s'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = 'rgba(100, 149, 237, 0.5)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = 'rgba(100, 149, 237, 0.3)';
+                                            }}
+                                        >
+                                            상세보기
+                                        </button>
                                     </td>
                                 </tr>
                                 );
@@ -596,6 +641,298 @@ const RealTrade = () => {
                                     참여자가 없습니다.
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* 상세보기 모달 */}
+            {detailModalOpen && selectedTrade && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 1000
+                    }}
+                    onClick={handleCloseDetailModal}
+                >
+                    <div
+                        style={{
+                            backgroundColor: '#1e1e1e',
+                            borderRadius: '8px',
+                            padding: '24px',
+                            maxWidth: '600px',
+                            width: '90%',
+                            maxHeight: '80vh',
+                            overflow: 'auto',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '20px',
+                            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                            paddingBottom: '12px'
+                        }}>
+                            <h3 style={{
+                                margin: 0,
+                                color: '#fff',
+                                fontSize: '18px'
+                            }}>
+                                {selectedTrade.stockName} 상세 정보
+                            </h3>
+                            <button
+                                onClick={handleCloseDetailModal}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: '#fff',
+                                    fontSize: '24px',
+                                    cursor: 'pointer',
+                                    padding: '0',
+                                    width: '30px',
+                                    height: '30px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: '4px',
+                                    transition: 'background-color 0.2s'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                }}
+                            >
+                                ×
+                            </button>
+                        </div>
+                        
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '16px'
+                        }}>
+                            {/* 종목명 */}
+                            <div style={{
+                                padding: '16px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                borderRadius: '4px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}>
+                                <div style={{
+                                    color: 'rgba(255, 255, 255, 0.6)',
+                                    fontSize: '12px',
+                                    marginBottom: '4px'
+                                }}>
+                                    종목명
+                                </div>
+                                <div style={{
+                                    color: '#fff',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold'
+                                }}>
+                                    {selectedTrade.stockName || '-'}
+                                </div>
+                            </div>
+
+                            {/* 시작 가격 */}
+                            <div style={{
+                                padding: '16px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                borderRadius: '4px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}>
+                                <div style={{
+                                    color: 'rgba(255, 255, 255, 0.6)',
+                                    fontSize: '12px',
+                                    marginBottom: '4px'
+                                }}>
+                                    시작 가격
+                                </div>
+                                <div style={{
+                                    color: '#fff',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold'
+                                }}>
+                                    {selectedTrade.buyPrice ? `${formatNumber(selectedTrade.buyPrice)}원` : '-'}
+                                </div>
+                            </div>
+
+                            {/* 시작 일자 */}
+                            <div style={{
+                                padding: '16px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                borderRadius: '4px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}>
+                                <div style={{
+                                    color: 'rgba(255, 255, 255, 0.6)',
+                                    fontSize: '12px',
+                                    marginBottom: '4px'
+                                }}>
+                                    시작 일자
+                                </div>
+                                <div style={{
+                                    color: '#fff',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold'
+                                }}>
+                                    {formatDate(selectedTrade.startDate)}
+                                </div>
+                            </div>
+
+                            {/* 매수 횟수 */}
+                            <div style={{
+                                padding: '16px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                borderRadius: '4px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}>
+                                <div style={{
+                                    color: 'rgba(255, 255, 255, 0.6)',
+                                    fontSize: '12px',
+                                    marginBottom: '4px'
+                                }}>
+                                    매수 횟수
+                                </div>
+                                <div style={{
+                                    color: '#fff',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold'
+                                }}>
+                                    {selectedTrade.currentBuyCount || 0}회
+                                </div>
+                            </div>
+
+                            {/* 매수 금액 (평단가 * 매수횟수) */}
+                            <div style={{
+                                padding: '16px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                borderRadius: '4px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}>
+                                <div style={{
+                                    color: 'rgba(255, 255, 255, 0.6)',
+                                    fontSize: '12px',
+                                    marginBottom: '4px'
+                                }}>
+                                    매수 금액 (평단가 × 매수횟수)
+                                </div>
+                                <div style={{
+                                    color: '#fff',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold'
+                                }}>
+                                    {selectedTrade.averagePrice && selectedTrade.currentBuyCount
+                                        ? `${formatNumber(selectedTrade.averagePrice * selectedTrade.currentBuyCount)}원`
+                                        : '-'}
+                                </div>
+                            </div>
+
+                            {/* 적립에 따른 평단가 */}
+                            <div style={{
+                                padding: '16px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                borderRadius: '4px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}>
+                                <div style={{
+                                    color: 'rgba(255, 255, 255, 0.6)',
+                                    fontSize: '12px',
+                                    marginBottom: '4px'
+                                }}>
+                                    적립에 따른 평단가
+                                </div>
+                                <div style={{
+                                    color: '#fff',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold'
+                                }}>
+                                    {selectedTrade.averagePrice ? `${formatNumber(selectedTrade.averagePrice)}원` : '-'}
+                                </div>
+                            </div>
+
+                            {/* 수익률 상태 */}
+                            <div style={{
+                                padding: '16px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                borderRadius: '4px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}>
+                                <div style={{
+                                    color: 'rgba(255, 255, 255, 0.6)',
+                                    fontSize: '12px',
+                                    marginBottom: '8px'
+                                }}>
+                                    수익률 상태
+                                </div>
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '8px'
+                                }}>
+                                    {/* 매수가 대비 수익률 */}
+                                    {selectedTrade.buyPrice && selectedTrade.currentPrice && (
+                                        <div>
+                                            <div style={{
+                                                color: 'rgba(255, 255, 255, 0.8)',
+                                                fontSize: '14px',
+                                                marginBottom: '4px'
+                                            }}>
+                                                매수가 대비:
+                                            </div>
+                                            <div style={{
+                                                color: calculateProfitRate(selectedTrade.currentPrice, selectedTrade.buyPrice) >= 0 ? '#ff6b6b' : '#4ecdc4',
+                                                fontSize: '18px',
+                                                fontWeight: 'bold'
+                                            }}>
+                                                {formatProfitRate(calculateProfitRate(selectedTrade.currentPrice, selectedTrade.buyPrice))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    {/* 평단가 대비 수익률 */}
+                                    {selectedTrade.averagePrice && selectedTrade.currentPrice && (
+                                        <div>
+                                            <div style={{
+                                                color: 'rgba(255, 255, 255, 0.8)',
+                                                fontSize: '14px',
+                                                marginBottom: '4px'
+                                            }}>
+                                                평단가 대비:
+                                            </div>
+                                            <div style={{
+                                                color: calculateProfitRate(selectedTrade.currentPrice, selectedTrade.averagePrice) >= 0 ? '#ff6b6b' : '#4ecdc4',
+                                                fontSize: '18px',
+                                                fontWeight: 'bold'
+                                            }}>
+                                                {formatProfitRate(calculateProfitRate(selectedTrade.currentPrice, selectedTrade.averagePrice))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    {(!selectedTrade.buyPrice || !selectedTrade.currentPrice) && 
+                                     (!selectedTrade.averagePrice || !selectedTrade.currentPrice) && (
+                                        <div style={{
+                                            color: 'rgba(255, 255, 255, 0.6)',
+                                            fontSize: '14px'
+                                        }}>
+                                            수익률 정보가 없습니다.
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
