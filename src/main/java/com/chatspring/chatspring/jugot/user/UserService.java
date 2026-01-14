@@ -113,6 +113,15 @@ public class UserService {
     }
 
     public User updateIntroductionLink(Long userId, String introductionLink) {
+        if (!introductionLink.matches("^(https?://).*")) {
+            throw new RuntimeException("올바른 URL 형식이 아닙니다.");
+        }
+
+        // 2. Notion 도메인 검증 (의도에 따라 선택 사항)
+        if (!introductionLink.contains("notion.so") && !introductionLink.contains("notion.site")) {
+            throw new RuntimeException("Notion 주소만 입력 가능합니다.");
+        }
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 

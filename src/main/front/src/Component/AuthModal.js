@@ -211,9 +211,13 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                             required
                             placeholder="아이디를 입력하세요"
                         />
-                        <div className="auth-form-hint">영문 소문자/숫자만 사용 가능, 6~20자, 특수문자 불가</div>
-                        {validationErrors.username && (
-                            <div className="auth-validation-error">{validationErrors.username}</div>
+                        {!isLogin && (
+                            <>
+                                <div className="auth-form-hint">영문 소문자/숫자만 사용 가능, 6~20자, 특수문자 불가</div>
+                                {validationErrors.username && (
+                                    <div className="auth-validation-error">{validationErrors.username}</div>
+                                )}
+                            </>
                         )}
                     </div>
                     <div className="auth-form-group">
@@ -226,9 +230,13 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                             required
                             placeholder="비밀번호를 입력하세요"
                         />
-                        <div className="auth-form-hint">영문/숫자/특수문자(@$!%*#?&) 포함, 8~20자</div>
-                        {validationErrors.password && (
-                            <div className="auth-validation-error">{validationErrors.password}</div>
+                        {!isLogin && (
+                            <>
+                                <div className="auth-form-hint">영문/숫자/특수문자(@$!%*#?&) 포함, 8~20자</div>
+                                {validationErrors.password && (
+                                    <div className="auth-validation-error">{validationErrors.password}</div>
+                                )}
+                            </>
                         )}
                     </div>
                     {!isLogin && (

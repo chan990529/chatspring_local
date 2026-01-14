@@ -4,6 +4,7 @@ import com.chatspring.chatspring.jugot.UserPrincipal;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    private static final String SECRET_KEY = "MAKEMONEYWITHCHIMAN000";
+    @Value("${jwt.secret}")
+    private String secretKey;
+
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterDto dto) {
@@ -77,7 +80,7 @@ public class UserController {
                     .claim("role", user.getRole())
                     .setIssuedAt(now)
                     .setExpiration(expiryDate)
-                    .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes())
+                    .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                     .compact();
 
             ResponseCookie cookie = ResponseCookie.from("authToken", token)
@@ -114,9 +117,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("auth", false));
         }
-        
+
         User user = userService.findById(userPrincipal.getId());
-        
+
         Map<String, Object> response = new HashMap<>();
         response.put("auth", true);
         response.put("username", userPrincipal.getUsername());
@@ -227,7 +230,7 @@ public class UserController {
             }
 
             String introductionLink = request.get("introductionLink");
-            
+
             // 빈 문자열도 허용 (링크 삭제)
             if (introductionLink == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -269,7 +272,7 @@ public class UserController {
             }
 
             String requestedNickname = request.get("requestedNickname");
-            
+
             if (requestedNickname == null || requestedNickname.trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(Map.of("success", false, "error", "변경할 닉네임을 입력해주세요."));
@@ -320,7 +323,7 @@ public class UserController {
             }
 
             java.util.List<User> users = userService.findUsersWithNicknameRequests();
-            
+
             java.util.List<Map<String, Object>> requestList = users.stream()
                     .map(user -> {
                         Map<String, Object> userInfo = new HashMap<>();

@@ -8,6 +8,10 @@ const UserInfoEdit = ({ isOpen, onClose, userInfo, onUpdate }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [validationErrors, setValidationErrors] = useState({
+        newPassword: '',
+        confirmPassword: ''
+    });
 
     // 탭 1: 기본 정보 상태
     const [currentPassword, setCurrentPassword] = useState('');
@@ -29,8 +33,27 @@ const UserInfoEdit = ({ isOpen, onClose, userInfo, onUpdate }) => {
             setConfirmPassword('');
             setError('');
             setSuccess('');
+            setValidationErrors({ newPassword: '', confirmPassword: '' });
         }
     }, [isOpen, userInfo]);
+
+    // 비밀번호 검증 함수
+    const validatePassword = (password) => {
+        if (!password) return '';
+        const pattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+        if (!pattern.test(password)) {
+            return '비밀번호는 영문, 숫자, 특수문자(@$!%*#?&)를 포함하여 8~20자여야 합니다.';
+        }
+        return '';
+    };
+
+    const validatePasswordConfirm = (password, passwordConfirm) => {
+        if (!passwordConfirm) return '';
+        if (password !== passwordConfirm) {
+            return '비밀번호가 일치하지 않습니다.';
+        }
+        return '';
+    };
 
     // 비밀번호 변경 처리
     const handlePasswordChange = async (e) => {
@@ -45,14 +68,16 @@ const UserInfoEdit = ({ isOpen, onClose, userInfo, onUpdate }) => {
             return;
         }
 
-        if (newPassword !== confirmPassword) {
-            setError('새 비밀번호가 일치하지 않습니다.');
-            setLoading(false);
-            return;
-        }
+        // 비밀번호 검증
+        const passwordError = validatePassword(newPassword);
+        const passwordConfirmError = validatePasswordConfirm(newPassword, confirmPassword);
 
-        if (newPassword.length < 4) {
-            setError('새 비밀번호는 최소 4자 이상이어야 합니다.');
+        setValidationErrors({
+            newPassword: passwordError,
+            confirmPassword: passwordConfirmError
+        });
+
+        if (passwordError || passwordConfirmError) {
             setLoading(false);
             return;
         }
@@ -72,6 +97,7 @@ const UserInfoEdit = ({ isOpen, onClose, userInfo, onUpdate }) => {
                 setCurrentPassword('');
                 setNewPassword('');
                 setConfirmPassword('');
+                setValidationErrors({ newPassword: '', confirmPassword: '' });
                 setTimeout(() => {
                     setSuccess('');
                 }, 3000);
@@ -201,18 +227,41 @@ const UserInfoEdit = ({ isOpen, onClose, userInfo, onUpdate }) => {
                                 <input
                                     type="password"
                                     value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    placeholder="새 비밀번호를 입력하세요 (최소 4자)"
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setNewPassword(value);
+                                        const passwordError = validatePassword(value);
+                                        setValidationErrors(prev => ({
+                                            ...prev,
+                                            newPassword: passwordError,
+                                            confirmPassword: validatePasswordConfirm(value, confirmPassword)
+                                        }));
+                                    }}
+                                    placeholder="새 비밀번호를 입력하세요"
                                 />
+                                <div className="user-info-edit-form-hint">영문/숫자/특수문자(@$!%*#?&) 포함, 8~20자</div>
+                                {validationErrors.newPassword && (
+                                    <div className="user-info-edit-validation-error">{validationErrors.newPassword}</div>
+                                )}
                             </div>
                             <div className="user-info-edit-form-group">
                                 <label>새 비밀번호 확인</label>
                                 <input
                                     type="password"
                                     value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setConfirmPassword(value);
+                                        setValidationErrors(prev => ({
+                                            ...prev,
+                                            confirmPassword: validatePasswordConfirm(newPassword, value)
+                                        }));
+                                    }}
                                     placeholder="새 비밀번호를 다시 입력하세요"
                                 />
+                                {validationErrors.confirmPassword && (
+                                    <div className="user-info-edit-validation-error">{validationErrors.confirmPassword}</div>
+                                )}
                             </div>
                             <button
                                 type="submit"
