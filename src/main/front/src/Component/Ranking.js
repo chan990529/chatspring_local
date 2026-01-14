@@ -192,6 +192,13 @@ const Ranking = () => {
         return price ? price.toLocaleString() : 'N/A';
     };
 
+    // 날짜 포맷팅 함수 (YYYY-MM-DD -> YYYY.MM.DD)
+    const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+        // LocalDate 형식 (YYYY-MM-DD)을 YYYY.MM.DD로 변환
+        return dateString.replace(/-/g, '.');
+    };
+
     // 랭킹 테이블 컴포넌트
     const RankingTable = ({ title, data, isGainers = true }) => (
         <div className="stock-table-container">
@@ -205,6 +212,7 @@ const Ranking = () => {
                             <th>순위</th>
                             <th>종목명</th>
                             <th className="text-right">포착가</th>
+                            <th className="text-right">포착일</th>
                             <th className="text-right">현재가</th>
                             <th className="text-right">{isGainers ? '상승률' : '하락률'}</th>
                         </tr>
@@ -219,6 +227,7 @@ const Ranking = () => {
                                 </td>
                                 <td>{stock.name}</td>
                                 <td className="text-right">{formatPrice(stock.capturePrice)}원</td>
+                                <td className="text-right">{formatDate(stock.captureDate)}</td>
                                 <td className="text-right">{formatPrice(stock.currentPrice)}원</td>
                                 <td className={`text-right change-rate ${stock.changeRate >= 0 ? 'positive' : 'negative'}`}>
                                     {formatChangeRate(stock.changeRate)}
