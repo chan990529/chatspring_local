@@ -83,11 +83,12 @@ public class StockDataUpdateService {
         } catch (Exception e) {
             logger.error("주식 데이터 일일 업데이트 중 오류 발생", e);
         } finally {
-            // 4. 월요일이면 RealTrade 평단가 업데이트 (Jugot 업데이트 완료 후 반드시 실행)
+            // 4. 평일이면 RealTrade 평단가 업데이트 (Jugot 업데이트 완료 후 반드시 실행)
             try {
                 LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
-                if (today.getDayOfWeek() == DayOfWeek.FRIDAY) {
-                    logger.info("월요일 감지: RealTrade 평단가 업데이트 시작");
+                DayOfWeek dayOfWeek = today.getDayOfWeek();
+                if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
+                    logger.info("평일 감지: RealTrade 평단가 업데이트 시작");
                     // 토큰이 필요하므로 다시 발급 (이미 캐시되어 있을 가능성 높음)
                     KiwoomApiClient.TokenResponse tokenResponse = kiwoomApiClient.getAccessToken();
                     String token = tokenResponse.getToken();
