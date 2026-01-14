@@ -380,53 +380,22 @@ const JugotList = () => {
             ) : (
                 <>
                     {/* 페이지네이션 UI */}
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: '10px',
-                        marginBottom: '30px',
-                        flexWrap: 'wrap'
-                    }}>
+                    <div className="pagination-container">
                         <button
+                            className="pagination-nav-button"
                             onClick={handlePreviousMonth}
                             disabled={currentMonthIndex === 0}
-                            style={{
-                                padding: '10px 20px',
-                                fontSize: '16px',
-                                backgroundColor: currentMonthIndex === 0 ? '#ccc' : '#007bff',
-                                color: '#fff',
-                                border: 'none',
-                                borderRadius: '5px',
-                                cursor: currentMonthIndex === 0 ? 'not-allowed' : 'pointer',
-                                fontWeight: 'bold'
-                            }}
                         >
                             이전
                         </button>
                         
                         {/* 월별 페이지 번호 */}
-                        <div style={{
-                            display: 'flex',
-                            gap: '8px',
-                            flexWrap: 'wrap',
-                            justifyContent: 'center'
-                        }}>
+                        <div className="pagination-month-buttons">
                             {monthList.map((month, index) => (
                                 <button
                                     key={month}
+                                    className={`pagination-month-button ${currentMonthIndex === index ? 'active' : ''}`}
                                     onClick={() => handleMonthSelect(index)}
-                                    style={{
-                                        padding: '10px 16px',
-                                        fontSize: '16px',
-                                        backgroundColor: currentMonthIndex === index ? '#28a745' : '#6c757d',
-                                        color: '#fff',
-                                        border: 'none',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer',
-                                        fontWeight: currentMonthIndex === index ? 'bold' : 'normal',
-                                        minWidth: '100px'
-                                    }}
                                 >
                                     {month}
                                 </button>
@@ -434,18 +403,9 @@ const JugotList = () => {
                         </div>
                         
                         <button
+                            className="pagination-nav-button"
                             onClick={handleNextMonth}
                             disabled={currentMonthIndex === monthList.length - 1}
-                            style={{
-                                padding: '10px 20px',
-                                fontSize: '16px',
-                                backgroundColor: currentMonthIndex === monthList.length - 1 ? '#ccc' : '#007bff',
-                                color: '#fff',
-                                border: 'none',
-                                borderRadius: '5px',
-                                cursor: currentMonthIndex === monthList.length - 1 ? 'not-allowed' : 'pointer',
-                                fontWeight: 'bold'
-                            }}
                         >
                             다음
                         </button>

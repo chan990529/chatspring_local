@@ -102,6 +102,7 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding-bottom: 10px;
     margin-top: 0;
+    font-size: 20px;
 }
 
 /* 5. 테이블 내부 스타일 */
@@ -289,6 +290,72 @@
 
 .jugot-scope .ranking-tab-content {
     margin-top: 20px;
+}
+
+/* 페이지네이션 스타일 */
+.jugot-scope .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.jugot-scope .pagination-nav-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.jugot-scope .pagination-nav-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.jugot-scope .pagination-nav-button:not(:disabled) {
+    background-color: #007bff;
+}
+
+.jugot-scope .pagination-nav-button:not(:disabled):hover {
+    background-color: #0056b3;
+}
+
+.jugot-scope .pagination-month-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.jugot-scope .pagination-month-button {
+    padding: 10px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    min-width: 100px;
+    transition: all 0.3s ease;
+}
+
+.jugot-scope .pagination-month-button.active {
+    background-color: #28a745;
+    font-weight: bold;
+}
+
+.jugot-scope .pagination-month-button:not(.active) {
+    background-color: #6c757d;
+}
+
+.jugot-scope .pagination-month-button:not(.active):hover {
+    background-color: #5a6268;
 }
 
 .jugot-scope .ranking-flex-container {
@@ -532,6 +599,32 @@
         font-size: 14px;
     }
 
+    .jugot-scope .ranking-tabs button {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    .jugot-scope .pagination-container {
+        gap: 8px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .jugot-scope .pagination-nav-button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .jugot-scope .pagination-month-button {
+        padding: 8px 12px;
+        font-size: 14px;
+        min-width: 80px;
+    }
+
+    .jugot-scope .pagination-month-buttons {
+        gap: 6px;
+    }
+
     .jugot-scope .auth-header {
         padding: 10px 15px;
     }
@@ -599,6 +692,32 @@
 
     .jugot-scope .stock-table-container h3 {
         font-size: 14px;
+    }
+
+    .jugot-scope .ranking-tabs button {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .jugot-scope .pagination-container {
+        gap: 6px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .jugot-scope .pagination-nav-button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .jugot-scope .pagination-month-button {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 70px;
+    }
+
+    .jugot-scope .pagination-month-buttons {
+        gap: 4px;
     }
 
     .jugot-scope .auth-header {
