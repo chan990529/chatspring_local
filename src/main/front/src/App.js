@@ -31,18 +31,32 @@ const queryClient = new QueryClient();
 
 
 // --- 2. ProtectedRoute (from App B) ---
-// (수정 없이 그대로 사용)
+// [수정] 스캘핑 전용 인증: 쿠키뿐만 아니라 localStorage의 'authToken' 존재 여부도 확인
 function ProtectedRoute({ element }) {
     const [isAuth, setIsAuth] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // 1. 스캘핑 전용 토큰이 localStorage에 있는지 먼저 확인 (Client-side Check)
+        const token = localStorage.getItem('authToken');
+        
+        if (!token) {
+            // 토큰이 없으면 서버에 물어볼 필요도 없이 권한 없음 처리
+            setIsAuth(false);
+            setLoading(false);
+            return;
+        }
+
+        // 2. 토큰이 있다면 유효성 검증 (Server-side Check)
+        // (기존 로직 유지: 쿠키나 토큰 유효성 확인)
         axios.get(`${config.API_BASE_URL}/api/check-auth`, { withCredentials: true })
             .then(response => {
                 setIsAuth(true);
                 setLoading(false);
             })
             .catch(error => {
+                // 검증 실패 시 localStorage 비우기 (선택사항)
+                localStorage.removeItem('authToken');
                 setIsAuth(false);
                 setLoading(false);
             });

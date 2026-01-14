@@ -97,8 +97,8 @@ const DashboardPage = () => {
             setUserInfo(null);
             setUserRole(null);
             
-            // 4. 로그인 페이지로 이동
-            navigate('/login');
+            // 4. 홈페이지로 이동 (jugot 앱의 홈)
+            navigate('/');
         }
     };
 
