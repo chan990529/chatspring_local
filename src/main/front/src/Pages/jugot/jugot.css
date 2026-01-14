@@ -438,6 +438,46 @@
     border-radius: 20px;
 }
 
+.jugot-scope .admin-link-btn {
+    margin-right: 10px;
+    padding: 8px 16px;
+    background-color: #ff6b6b;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.jugot-scope .admin-link-btn:hover {
+    background-color: #ff5252;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.jugot-scope .info-edit-btn {
+    margin-right: 10px;
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.jugot-scope .info-edit-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
 /* 모바일 반응형 스타일 */
 @media (max-width: 768px) {
     .jugot-scope .stock-table-container {
@@ -483,6 +523,43 @@
         padding: 10px 15px;
         font-size: 14px;
     }
+
+    .jugot-scope .auth-header {
+        padding: 10px 15px;
+    }
+
+    .jugot-scope .admin-link-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        margin-right: 8px;
+    }
+
+    .jugot-scope .info-edit-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        margin-right: 8px;
+        gap: 4px;
+    }
+
+    .jugot-scope .info-edit-btn span:first-child {
+        font-size: 12px;
+    }
+
+    .jugot-scope .user-nickname {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+
+    .jugot-scope .login-btn,
+    .jugot-scope .logout-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .jugot-scope .user-info {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
 }
 
 @media (max-width: 480px) {
@@ -508,5 +585,42 @@
 
     .jugot-scope .stock-table-container h3 {
         font-size: 14px;
+    }
+
+    .jugot-scope .auth-header {
+        padding: 8px 10px;
+    }
+
+    .jugot-scope .admin-link-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+        margin-right: 6px;
+    }
+
+    .jugot-scope .info-edit-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+        margin-right: 6px;
+        gap: 3px;
+    }
+
+    .jugot-scope .info-edit-btn span:first-child {
+        font-size: 11px;
+    }
+
+    .jugot-scope .user-nickname {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .jugot-scope .login-btn,
+    .jugot-scope .logout-btn {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+
+    .jugot-scope .user-info {
+        gap: 8px;
+        flex-wrap: wrap;
     }
 }

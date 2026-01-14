@@ -133,16 +133,6 @@ const DashboardPage = () => {
                                 <Link 
                                     to="/admin" 
                                     className="admin-link-btn"
-                                    style={{
-                                        marginRight: '10px',
-                                        padding: '8px 16px',
-                                        backgroundColor: '#ff6b6b',
-                                        color: 'white',
-                                        textDecoration: 'none',
-                                        borderRadius: '4px',
-                                        fontSize: '14px',
-                                        fontWeight: 'bold'
-                                    }}
                                 >
                                     관리자 페이지로
                                 </Link>
@@ -150,19 +140,6 @@ const DashboardPage = () => {
                             <button 
                                 onClick={() => setIsUserInfoEditOpen(true)} 
                                 className="info-edit-btn"
-                                style={{
-                                    marginRight: '10px',
-                                    padding: '8px 16px',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                    color: 'white',
-                                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                                    borderRadius: '4px',
-                                    fontSize: '14px',
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '6px'
-                                }}
                                 title="정보 수정"
                             >
                                 <span>⚙️</span>
