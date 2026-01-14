@@ -146,6 +146,9 @@ const DashboardPage = () => {
                                 <span>정보 수정</span>
                             </button>
                             <span className="user-nickname">{userInfo?.nickname || '사용자'}님</span>
+                            <button onClick={() => navigate('/Scalping')} className="research-btn">
+                                연구소로
+                            </button>
                             <button onClick={handleLogout} className="logout-btn">로그아웃</button>
                         </div>
                     ) : (
