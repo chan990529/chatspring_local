@@ -613,27 +613,39 @@ const RealTrade = () => {
                         </div>
                         <div style={{
                             display: 'flex',
-                            flexDirection: 'column',
-                            gap: '8px'
+                            flexWrap: 'wrap', // 줄바꿈 허용
+                            gap: '8px',
+                            alignContent: 'flex-start'
                         }}>
                             {selectedMembers.length > 0 ? (
                                 selectedMembers.map((member, index) => (
                                     <div
                                         key={index}
                                         style={{
-                                            padding: '12px',
-                                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                                            borderRadius: '4px',
-                                            color: '#fff',
+                                            padding: '8px 16px',
+                                            backgroundColor: 'rgba(76, 175, 80, 0.2)', // 은은한 초록색 배경
+                                            borderRadius: '20px', // 둥근 캡슐 모양
+                                            border: '1px solid rgba(76, 175, 80, 0.4)',
+                                            color: '#e8f5e9',
                                             fontSize: '14px',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)'
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '6px'
                                         }}
                                     >
-                                        {index + 1}. {member}
+                                        <span style={{ 
+                                            fontSize: '10px', 
+                                            opacity: 0.7,
+                                            marginRight: '2px'
+                                        }}>
+                                            {index + 1}
+                                        </span>
+                                        {member}
                                     </div>
                                 ))
                             ) : (
                                 <div style={{
+                                    width: '100%',
                                     padding: '20px',
                                     textAlign: 'center',
                                     color: 'rgba(255, 255, 255, 0.6)'

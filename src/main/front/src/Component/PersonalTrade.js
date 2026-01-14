@@ -344,7 +344,7 @@ const PersonalTrade = () => {
                                             const returnRate = calculateReturnRate(trade);
                                             const returnRateFormatted = formatReturnRate(returnRate);
                                             const returnRateColor = returnRate != null 
-                                                ? (returnRate >= 0 ? '#4caf50' : '#f44336')
+                                                ? (returnRate >= 0 ? '#ff6b6b' : '#4ecdc4')
                                                 : 'rgba(255, 255, 255, 0.7)';
                                             
                                             return (
@@ -384,7 +384,7 @@ const PersonalTrade = () => {
                                     const totalReturnRate = calculateTotalReturnRate();
                                     const totalReturnRateFormatted = formatReturnRate(totalReturnRate);
                                     const totalReturnRateColor = totalReturnRate != null 
-                                        ? (totalReturnRate >= 0 ? '#4caf50' : '#f44336')
+                                        ? (totalReturnRate >= 0 ? '#ff6b6b' : '#4ecdc4')
                                         : 'rgba(255, 255, 255, 0.7)';
                                     
                                     return (
