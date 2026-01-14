@@ -85,4 +85,19 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("인증키가 일치하지 않습니다.");
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        // 동일한 이름("authToken"), 동일한 경로("/")로 쿠키를 생성하되
+        // MaxAge를 0으로 설정하여 즉시 만료시킵니다.
+        ResponseCookie cookie = ResponseCookie.from("authToken", "")
+                .httpOnly(true)
+                .path("/")
+                .maxAge(0) // 핵심: 수명을 0으로 설정
+                .build();
+        
+        response.setHeader("Set-Cookie", cookie.toString());
+        
+        return ResponseEntity.ok(Map.of("message", "로그아웃 성공"));
+    }
 }

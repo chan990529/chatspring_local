@@ -1,6 +1,6 @@
 // --- src/Pages/jugot/DashboardPage.js ---
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Navigator from '../../Component/Navigator';
 import JugotList from '../../Component/JugotList';
 import Ranking from '../../Component/Ranking';
@@ -19,6 +19,7 @@ const DashboardPage = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [userRole, setUserRole] = useState(null);
     const location = useLocation();
+    const navigate = useNavigate();
 
     const checkAuth = async () => {
         try {
@@ -81,23 +82,23 @@ const DashboardPage = () => {
 
     const handleLogout = async () => {
         try {
-            // 백엔드 로그아웃 API 호출 시도 (쿠키 제거)
-            // 백엔드에 로그아웃 API가 없는 경우를 대비해 에러 무시
-            try {
-                await axios.post(`${config.API_BASE_URL}/api/user/logout`, {}, {
-                    withCredentials: true
-                });
-            } catch (error) {
-                // 로그아웃 API가 없을 수 있으므로 에러는 무시
-                console.log('로그아웃 API 호출 실패 (백엔드에 로그아웃 API가 없을 수 있음)');
-            }
+            // 1. 서버에 로그아웃 요청 (쿠키 삭제를 위해 필수)
+            await axios.post(`${config.API_BASE_URL}/api/logout`, {}, { withCredentials: true });
         } catch (error) {
-            console.error('로그아웃 중 오류:', error);
+            console.error("Logout request failed", error);
         } finally {
-            // 로컬 상태 초기화
+            // 2. 클라이언트 측 정리 (localStorage 및 상태 초기화)
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('authTokenExpiry');
+            localStorage.removeItem('authVersion');
+            
+            // 3. 로컬 상태 초기화
             setIsLoggedIn(false);
             setUserInfo(null);
             setUserRole(null);
+            
+            // 4. 로그인 페이지로 이동
+            navigate('/login');
         }
     };
 
