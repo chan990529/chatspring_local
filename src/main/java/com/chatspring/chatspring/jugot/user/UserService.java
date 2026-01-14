@@ -14,6 +14,24 @@ public class UserService {
     private BCryptPasswordEncoder passwordEncoder;
 
     public User register(User user) {
+        // 아이디 검증: 영문 소문자/숫자, 6~20자, 특수문자 불가
+        String username = user.getUsername();
+        if (username == null || !username.matches("^[a-z0-9]{6,20}$")) {
+            throw new RuntimeException("아이디는 영문 소문자와 숫자만 사용 가능하며, 6~20자여야 합니다.");
+        }
+
+        // 닉네임 검증: 한글/영문, 최대 10자, 특수문자 불가
+        String nickname = user.getNickname();
+        if (nickname == null || !nickname.matches("^[가-힣a-zA-Z]{1,10}$")) {
+            throw new RuntimeException("닉네임은 한글과 영문만 사용 가능하며, 최대 10자까지 입력 가능합니다.");
+        }
+
+        // 비밀번호 검증: 영문/숫자/특수문자 포함, 8~20자
+        String password = user.getPassword();
+        if (password == null || !password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,20}$")) {
+            throw new RuntimeException("비밀번호는 영문, 숫자, 특수문자(@$!%*#?&)를 포함하여 8~20자여야 합니다.");
+        }
+
         // 아이디 중복 체크
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("이미 존재하는 아이디입니다.");

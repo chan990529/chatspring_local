@@ -138,3 +138,16 @@
     color: #870160;
 }
 
+.auth-form-hint {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.auth-validation-error {
+    font-size: 12px;
+    color: #ff6b6b;
+    margin-top: 4px;
+}
+

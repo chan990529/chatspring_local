@@ -8,22 +8,110 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
+        passwordConfirm: '',
         nickname: ''
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [validationErrors, setValidationErrors] = useState({
+        username: '',
+        password: '',
+        passwordConfirm: '',
+        nickname: ''
+    });
+
+    // 검증 함수들
+    const validateUsername = (username) => {
+        if (!username) return '';
+        const pattern = /^[a-z0-9]{6,20}$/;
+        if (!pattern.test(username)) {
+            return '아이디는 영문 소문자와 숫자만 사용 가능하며, 6~20자여야 합니다.';
+        }
+        return '';
+    };
+
+    const validateNickname = (nickname) => {
+        if (!nickname) return '';
+        const pattern = /^[가-힣a-zA-Z]{1,10}$/;
+        if (!pattern.test(nickname)) {
+            return '닉네임은 한글과 영문만 사용 가능하며, 최대 10자까지 입력 가능합니다.';
+        }
+        return '';
+    };
+
+    const validatePassword = (password) => {
+        if (!password) return '';
+        const pattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+        if (!pattern.test(password)) {
+            return '비밀번호는 영문, 숫자, 특수문자(@$!%*#?&)를 포함하여 8~20자여야 합니다.';
+        }
+        return '';
+    };
+
+    const validatePasswordConfirm = (password, passwordConfirm) => {
+        if (!passwordConfirm) return '';
+        if (password !== passwordConfirm) {
+            return '비밀번호가 일치하지 않습니다.';
+        }
+        return '';
+    };
 
     const handleChange = (e) => {
+        const { name, value } = e.target;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [name]: value
         });
         setError('');
+
+        // 실시간 검증
+        let validationError = '';
+        if (name === 'username') {
+            validationError = validateUsername(value);
+        } else if (name === 'nickname') {
+            validationError = validateNickname(value);
+        } else if (name === 'password') {
+            validationError = validatePassword(value);
+            // 비밀번호가 변경되면 비밀번호 확인도 다시 검증
+            setValidationErrors(prev => ({
+                ...prev,
+                password: validationError,
+                passwordConfirm: validatePasswordConfirm(value, formData.passwordConfirm)
+            }));
+            return;
+        } else if (name === 'passwordConfirm') {
+            validationError = validatePasswordConfirm(formData.password, value);
+        }
+
+        setValidationErrors(prev => ({
+            ...prev,
+            [name]: validationError
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        
+        // 회원가입 시 검증
+        if (!isLogin) {
+            const usernameError = validateUsername(formData.username);
+            const nicknameError = validateNickname(formData.nickname);
+            const passwordError = validatePassword(formData.password);
+            const passwordConfirmError = validatePasswordConfirm(formData.password, formData.passwordConfirm);
+
+            setValidationErrors({
+                username: usernameError,
+                nickname: nicknameError,
+                password: passwordError,
+                passwordConfirm: passwordConfirmError
+            });
+
+            if (usernameError || nicknameError || passwordError || passwordConfirmError) {
+                return;
+            }
+        }
+
         setLoading(true);
 
         try {
@@ -60,7 +148,8 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                 if (response.data.success) {
                     alert('회원가입이 완료되었습니다. 로그인해주세요.');
                     setIsLogin(true);
-                    setFormData({ username: '', password: '', nickname: '' });
+                    setFormData({ username: '', password: '', passwordConfirm: '', nickname: '' });
+                    setValidationErrors({ username: '', password: '', passwordConfirm: '', nickname: '' });
                 }
             }
         } catch (err) {
@@ -81,8 +170,9 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
 
     const toggleMode = () => {
         setIsLogin(!isLogin);
-        setFormData({ username: '', password: '', nickname: '' });
+        setFormData({ username: '', password: '', passwordConfirm: '', nickname: '' });
         setError('');
+        setValidationErrors({ username: '', password: '', passwordConfirm: '', nickname: '' });
     };
 
     if (!isOpen) return null;
@@ -105,6 +195,10 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                 required
                                 placeholder="닉네임을 입력하세요"
                             />
+                            <div className="auth-form-hint">한글/영문만 사용 가능, 최대 10자, 특수문자 불가</div>
+                            {validationErrors.nickname && (
+                                <div className="auth-validation-error">{validationErrors.nickname}</div>
+                            )}
                         </div>
                     )}
                     <div className="auth-form-group">
@@ -117,6 +211,10 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                             required
                             placeholder="아이디를 입력하세요"
                         />
+                        <div className="auth-form-hint">영문 소문자/숫자만 사용 가능, 6~20자, 특수문자 불가</div>
+                        {validationErrors.username && (
+                            <div className="auth-validation-error">{validationErrors.username}</div>
+                        )}
                     </div>
                     <div className="auth-form-group">
                         <label>비밀번호</label>
@@ -128,7 +226,27 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                             required
                             placeholder="비밀번호를 입력하세요"
                         />
+                        <div className="auth-form-hint">영문/숫자/특수문자(@$!%*#?&) 포함, 8~20자</div>
+                        {validationErrors.password && (
+                            <div className="auth-validation-error">{validationErrors.password}</div>
+                        )}
                     </div>
+                    {!isLogin && (
+                        <div className="auth-form-group">
+                            <label>비밀번호 확인</label>
+                            <input
+                                type="password"
+                                name="passwordConfirm"
+                                value={formData.passwordConfirm}
+                                onChange={handleChange}
+                                required
+                                placeholder="비밀번호를 다시 입력하세요"
+                            />
+                            {validationErrors.passwordConfirm && (
+                                <div className="auth-validation-error">{validationErrors.passwordConfirm}</div>
+                            )}
+                        </div>
+                    )}
                     
                     {error && <div className="auth-error">{error}</div>}
                     
