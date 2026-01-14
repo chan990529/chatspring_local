@@ -30,6 +30,28 @@ public class JugotService {
         this.repository = repository;
     }
 
+    // 한글 컬럼명을 영문 필드명으로 매핑하는 맵
+    private Map<String, String> getColumnNameMapping() {
+        Map<String, String> mapping = new HashMap<>();
+        mapping.put("종목코드", "stock_code");
+        mapping.put("종목명", "stock_name");
+        mapping.put("종가", "close_price");
+        mapping.put("송곳일", "capture_date");
+        mapping.put("포착가", "capture_price");
+        mapping.put("시장구분", "market");
+        return mapping;
+    }
+
+    // 컬럼명을 영문 필드명으로 변환 (한글이면 매핑, 아니면 그대로)
+    private String normalizeColumnName(String columnName) {
+        if (columnName == null) {
+            return null;
+        }
+        String trimmed = columnName.trim();
+        Map<String, String> mapping = getColumnNameMapping();
+        return mapping.getOrDefault(trimmed, trimmed);
+    }
+
     // 수정: (year, month, weekInMonth)로 기간 계산 (월 기준 1주차~5주차, 월요일 시작, 일요일 끝)
     public List<JugotDto> getByYearMonthWeek(int year, int month, int weekInMonth) {
         LocalDate[] range = computeWeekRangeOfMonth(year, month, weekInMonth);
@@ -185,12 +207,13 @@ public class JugotService {
             String[] requiredColumns = {"stock_name", "stock_code", "capture_price", "capture_date"};
             String[] optionalColumns = {"market","highest_price", "lowest_price"};
             
-            // 헤더에서 컬럼 인덱스 찾기
+            // 헤더에서 컬럼 인덱스 찾기 (한글 컬럼명을 영문으로 변환)
             for (int i = 0; i < headerRow.getLastCellNum(); i++) {
                 Cell cell = headerRow.getCell(i);
                 if (cell != null) {
                     String cellValue = getCellValueAsString(cell);
-                    columnMap.put(cellValue.trim(), i);
+                    String normalizedColumnName = normalizeColumnName(cellValue);
+                    columnMap.put(normalizedColumnName, i);
                 }
             }
             
@@ -346,12 +369,15 @@ public class JugotService {
 //                    }
 //                    jugot.setLowestPrice(lowestPrice);
                     
-                    // market_type (선택, String)
-                    if (columnMap.containsKey("market_type")) {
-                        String marketType = getCellValue(row, columnMap.get("market_type"));
-                        if (marketType != null && !marketType.trim().isEmpty()) {
-                            jugot.setMarketType(marketType.trim());
-                        }
+                    // market 또는 market_type (선택, String) - 시장구분
+                    String marketType = null;
+                    if (columnMap.containsKey("market")) {
+                        marketType = getCellValue(row, columnMap.get("market"));
+                    } else if (columnMap.containsKey("market_type")) {
+                        marketType = getCellValue(row, columnMap.get("market_type"));
+                    }
+                    if (marketType != null && !marketType.trim().isEmpty()) {
+                        jugot.setMarketType(marketType.trim());
                     }
                     
                     // 중복 검사: 포착일과 종목명이 같은 데이터가 이미 DB에 있는지 확인
@@ -775,7 +801,8 @@ public class JugotService {
             
             Map<String, Integer> columnMap = new HashMap<>();
             for (int i = 0; i < headers.length; i++) {
-                columnMap.put(headers[i].trim(), i);
+                String normalizedColumnName = normalizeColumnName(headers[i]);
+                columnMap.put(normalizedColumnName, i);
             }
             
             // 필수 컬럼 검증
@@ -920,12 +947,15 @@ public class JugotService {
 //                    }
 //                    jugot.setLowestPrice(lowestPrice);
                     
-                    // market_type (선택, String)
-                    if (columnMap.containsKey("market_type") && columnMap.get("market_type") < values.length) {
-                        String marketType = values[columnMap.get("market_type")].trim();
-                        if (!marketType.isEmpty()) {
-                            jugot.setMarketType(marketType);
-                        }
+                    // market 또는 market_type (선택, String) - 시장구분
+                    String marketType = null;
+                    if (columnMap.containsKey("market") && columnMap.get("market") < values.length) {
+                        marketType = values[columnMap.get("market")].trim();
+                    } else if (columnMap.containsKey("market_type") && columnMap.get("market_type") < values.length) {
+                        marketType = values[columnMap.get("market_type")].trim();
+                    }
+                    if (marketType != null && !marketType.isEmpty()) {
+                        jugot.setMarketType(marketType);
                     }
                     
                     // 중복 검사: 포착일과 종목명이 같은 데이터가 이미 DB에 있는지 확인

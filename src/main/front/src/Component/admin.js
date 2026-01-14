@@ -438,7 +438,10 @@ const AdminPage = () => {
                 <h2>엑셀 업로드</h2>
                 <p style={{ marginBottom: '15px', color: 'rgba(255, 255, 255, 0.8)' }}>
                     Jugot 데이터를 엑셀 파일(.xlsx, .xls) 또는 CSV 파일(.csv)로 업로드합니다.
-                    필수 컬럼: stock_code, stock_name, close_price, market, capture_date, capture_price, lowest_price
+                    <br />
+                    필수 컬럼: stock_code (종목코드), stock_name (종목명), capture_price (포착가), capture_date (송곳일)
+                    <br />
+                    선택 컬럼: close_price (종가), market (시장구분)
                 </p>
                 
                 <div style={{ marginBottom: '15px' }}>
