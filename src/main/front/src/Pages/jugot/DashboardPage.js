@@ -8,6 +8,7 @@ import RealTrade from '../../Component/RealTrade';
 import PersonalTrade from '../../Component/PersonalTrade';
 import AuthModal from '../../Component/AuthModal';
 import UserInfoEdit from '../../Component/UserInfoEdit';
+import RefreshableGrid from '../scalping/RefreshableGrid';
 import axios from 'axios';
 import config from '../../config';
 
@@ -20,6 +21,8 @@ const DashboardPage = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
     const [userRole, setUserRole] = useState(null);
+    const [refreshKey, setRefreshKey] = useState(0);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -113,13 +116,45 @@ const DashboardPage = () => {
         }
     };
 
+    // 새로고침 함수: 주곳 데이터를 강제로 업데이트하고 캐시를 무효화
+    const handleRefresh = async () => {
+        if (isRefreshing) {
+            return; // 이미 새로고침 중이면 무시
+        }
+
+        try {
+            setIsRefreshing(true);
+            
+            // 1. 주곳 데이터 강제 업데이트 API 호출
+            await axios.post(`${config.API_BASE_URL}/api/kiwoom/update-all`, {}, {
+                withCredentials: true
+            });
+            
+            // 2. 캐시 무효화
+            const CACHE_KEY = 'jugot_data_recent_6months';
+            localStorage.removeItem(CACHE_KEY);
+            
+            // 3. refreshKey 증가하여 컴포넌트 강제 리렌더링
+            setRefreshKey(prev => prev + 1);
+            
+            // 4. 성공 메시지
+            alert('데이터 업데이트가 시작되었습니다. 잠시 후 데이터가 갱신됩니다.');
+            
+        } catch (error) {
+            console.error('데이터 새로고침 실패:', error);
+            alert('데이터 새로고침 중 오류가 발생했습니다: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setIsRefreshing(false);
+        }
+    };
+
     const renderContent = () => {
         switch (activeTab) {
-            case '주곳리스트': return <JugotList />;
-            case '등락랭킹':   return <Ranking />;
-            case '실매매':     return <RealTrade />;
-            case '개인매매':   return <PersonalTrade />;
-            default:           return <JugotList />;
+            case '주곳리스트': return <JugotList key={`jugot-${refreshKey}`} />;
+            case '등락랭킹':   return <Ranking key={`ranking-${refreshKey}`} />;
+            case '실매매':     return <RealTrade key={`realtrade-${refreshKey}`} />;
+            case '개인매매':   return <PersonalTrade key={`personal-${refreshKey}`} />;
+            default:           return <JugotList key={`jugot-${refreshKey}`} />;
         }
     };
 
@@ -165,6 +200,7 @@ const DashboardPage = () => {
             </div>
             <Navigator activeTab={activeTab} setActiveTab={setActiveTab} />
             <main className="content">{renderContent()}</main>
+            <RefreshableGrid onRefresh={handleRefresh} />
             <AuthModal
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
