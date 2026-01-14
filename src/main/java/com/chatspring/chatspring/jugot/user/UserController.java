@@ -303,7 +303,8 @@ public class UserController {
      * 관리자 권한 확인 헬퍼 메서드
      */
     private boolean isAdmin(UserPrincipal userPrincipal) {
-        return userPrincipal != null && "pingddak".equals(userPrincipal.getUsername());
+        // username 대신 role을 확인하도록 변경
+        return userPrincipal != null && "pingddak".equals(userPrincipal.getRole());
     }
 
     /**
