@@ -149,9 +149,14 @@ const DashboardPage = () => {
                             <button onClick={handleLogout} className="logout-btn">로그아웃</button>
                         </div>
                     ) : (
-                        <button onClick={() => setIsAuthModalOpen(true)} className="login-btn">
-                            로그인 / 회원가입
-                        </button>
+                        <div className="auth-buttons">
+                            <button onClick={() => setIsAuthModalOpen(true)} className="login-btn">
+                                로그인 / 회원가입
+                            </button>
+                            <button onClick={() => navigate('/Scalping')} className="research-btn">
+                                연구소로
+                            </button>
+                        </div>
                     )}
                 </div>
             </div>
