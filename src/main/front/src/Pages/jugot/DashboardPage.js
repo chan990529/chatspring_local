@@ -116,8 +116,8 @@ const DashboardPage = () => {
         }
     };
 
-    // 새로고침 함수: 주곳 데이터를 강제로 업데이트하고 캐시를 무효화
-    const handleRefresh = async () => {
+    // 새로고침 함수: 캐시를 무효화하고 DB의 최신 데이터를 다시 가져옴
+    const handleRefresh = () => {
         if (isRefreshing) {
             return; // 이미 새로고침 중이면 무시
         }
@@ -125,24 +125,15 @@ const DashboardPage = () => {
         try {
             setIsRefreshing(true);
             
-            // 1. 주곳 데이터 강제 업데이트 API 호출
-            await axios.post(`${config.API_BASE_URL}/api/kiwoom/update-all`, {}, {
-                withCredentials: true
-            });
-            
-            // 2. 캐시 무효화
+            // 1. 캐시 무효화 (DB에서 최신 데이터를 다시 가져오도록 함)
             const CACHE_KEY = 'jugot_data_recent_6months';
             localStorage.removeItem(CACHE_KEY);
             
-            // 3. refreshKey 증가하여 컴포넌트 강제 리렌더링
+            // 2. refreshKey 증가하여 컴포넌트 강제 리렌더링
             setRefreshKey(prev => prev + 1);
-            
-            // 4. 성공 메시지
-            alert('데이터 업데이트가 시작되었습니다. 잠시 후 데이터가 갱신됩니다.');
             
         } catch (error) {
             console.error('데이터 새로고침 실패:', error);
-            alert('데이터 새로고침 중 오류가 발생했습니다: ' + (error.response?.data?.message || error.message));
         } finally {
             setIsRefreshing(false);
         }
