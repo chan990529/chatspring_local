@@ -115,14 +115,306 @@ public class UserController {
                     .body(Map.of("auth", false));
         }
         
+        User user = userService.findById(userPrincipal.getId());
+        
         Map<String, Object> response = new HashMap<>();
         response.put("auth", true);
         response.put("username", userPrincipal.getUsername());
-        response.put("nickname", userPrincipal.getNickname());
+        response.put("nickname", user.getNickname());
+        response.put("requestedNickname", user.getRequestedNickname());
+        response.put("introductionLink", user.getIntroductionLink());
         response.put("id", userPrincipal.getId());
         response.put("role", userPrincipal.getRole());
 
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<?> updateUserInfo(
+            @RequestBody UserInfoUpdateDto dto,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (userPrincipal == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("success", false, "error", "인증이 필요합니다."));
+            }
+
+            User updatedUser = userService.updateUserInfo(userPrincipal.getId(), dto);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "회원 정보가 수정되었습니다.");
+            response.put("introductionLink", updatedUser.getIntroductionLink());
+            response.put("requestedNickname", updatedUser.getRequestedNickname());
+            if (updatedUser.getRequestedNickname() != null) {
+                response.put("message", "닉네임 변경 요청이 접수되었습니다. 관리자 승인을 기다려주세요.");
+            }
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", e.getMessage());
+            if (e.getMessage().contains("닉네임")) {
+                response.put("errorCode", "NICKNAME_DUPLICATE");
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "회원 정보 수정 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PutMapping("/me/password")
+    public ResponseEntity<?> changePassword(
+            @RequestBody PasswordChangeDto dto,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (userPrincipal == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("success", false, "error", "인증이 필요합니다."));
+            }
+
+            // 입력값 검증
+            if (dto.getCurrentPassword() == null || dto.getCurrentPassword().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("success", false, "error", "현재 비밀번호를 입력해주세요."));
+            }
+
+            if (dto.getNewPassword() == null || dto.getNewPassword().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("success", false, "error", "새 비밀번호를 입력해주세요."));
+            }
+
+            if (dto.getNewPassword().length() < 4) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("success", false, "error", "새 비밀번호는 최소 4자 이상이어야 합니다."));
+            }
+
+            userService.changePassword(userPrincipal.getId(), dto.getCurrentPassword(), dto.getNewPassword());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "비밀번호가 성공적으로 변경되었습니다.");
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", e.getMessage());
+            if (e.getMessage().contains("비밀번호")) {
+                response.put("errorCode", "PASSWORD_MISMATCH");
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "비밀번호 변경 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PutMapping("/me/introduction-link")
+    public ResponseEntity<?> updateIntroductionLink(
+            @RequestBody Map<String, String> request,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (userPrincipal == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("success", false, "error", "인증이 필요합니다."));
+            }
+
+            String introductionLink = request.get("introductionLink");
+            
+            // 빈 문자열도 허용 (링크 삭제)
+            if (introductionLink == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("success", false, "error", "introductionLink 필드가 필요합니다."));
+            }
+
+            User updatedUser = userService.updateIntroductionLink(userPrincipal.getId(), introductionLink);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "자기소개 링크가 업데이트되었습니다.");
+            response.put("introductionLink", updatedUser.getIntroductionLink());
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "자기소개 링크 업데이트 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * 닉네임 변경 신청 API
+     */
+    @PostMapping("/me/nickname-request")
+    public ResponseEntity<?> requestNicknameChange(
+            @RequestBody Map<String, String> request,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (userPrincipal == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("success", false, "error", "인증이 필요합니다."));
+            }
+
+            String requestedNickname = request.get("requestedNickname");
+            
+            if (requestedNickname == null || requestedNickname.trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("success", false, "error", "변경할 닉네임을 입력해주세요."));
+            }
+
+            User updatedUser = userService.requestNicknameChange(userPrincipal.getId(), requestedNickname.trim());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "닉네임 변경 요청이 접수되었습니다. 관리자 승인을 기다려주세요.");
+            response.put("requestedNickname", updatedUser.getRequestedNickname());
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", e.getMessage());
+            if (e.getMessage().contains("닉네임") || e.getMessage().contains("이미")) {
+                response.put("errorCode", "NICKNAME_DUPLICATE");
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "닉네임 변경 요청 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * 관리자 권한 확인 헬퍼 메서드
+     */
+    private boolean isAdmin(UserPrincipal userPrincipal) {
+        return userPrincipal != null && "pingddak".equals(userPrincipal.getUsername());
+    }
+
+    /**
+     * 닉네임 변경 요청 목록 조회 (관리자용)
+     */
+    @GetMapping("/admin/nickname-requests")
+    public ResponseEntity<?> getNicknameRequests(
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (!isAdmin(userPrincipal)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("success", false, "error", "관리자 권한이 필요합니다."));
+            }
+
+            java.util.List<User> users = userService.findUsersWithNicknameRequests();
+            
+            java.util.List<Map<String, Object>> requestList = users.stream()
+                    .map(user -> {
+                        Map<String, Object> userInfo = new HashMap<>();
+                        userInfo.put("id", user.getId());
+                        userInfo.put("username", user.getUsername());
+                        userInfo.put("currentNickname", user.getNickname());
+                        userInfo.put("requestedNickname", user.getRequestedNickname());
+                        return userInfo;
+                    })
+                    .collect(java.util.stream.Collectors.toList());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("requests", requestList);
+            response.put("count", requestList.size());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "요청 목록 조회 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * 닉네임 변경 요청 승인 (관리자용)
+     */
+    @PutMapping("/admin/nickname-requests/{userId}/approve")
+    public ResponseEntity<?> approveNicknameChange(
+            @PathVariable Long userId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (!isAdmin(userPrincipal)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("success", false, "error", "관리자 권한이 필요합니다."));
+            }
+
+            User updatedUser = userService.approveNicknameChange(userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "닉네임 변경이 승인되었습니다.");
+            response.put("userId", updatedUser.getId());
+            response.put("username", updatedUser.getUsername());
+            response.put("nickname", updatedUser.getNickname());
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "닉네임 변경 승인 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * 닉네임 변경 요청 거절 (관리자용)
+     */
+    @PutMapping("/admin/nickname-requests/{userId}/reject")
+    public ResponseEntity<?> rejectNicknameChange(
+            @PathVariable Long userId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (!isAdmin(userPrincipal)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("success", false, "error", "관리자 권한이 필요합니다."));
+            }
+
+            User updatedUser = userService.rejectNicknameChange(userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "닉네임 변경 요청이 거절되었습니다.");
+            response.put("userId", updatedUser.getId());
+            response.put("username", updatedUser.getUsername());
+            response.put("nickname", updatedUser.getNickname());
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "닉네임 변경 거절 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
     // DTO 클래스들

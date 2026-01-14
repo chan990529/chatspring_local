@@ -20,6 +20,12 @@ public class User {
     @Column(nullable = false, unique = true)
     private String nickname;
 
+    @Column(name = "requested_nickname")
+    private String requestedNickname; // 닉네임 변경 요청 (관리자 승인 대기)
+
+    @Column(name = "introduction_link")
+    private String introductionLink; // 자기소개 링크 (노션 등)
+
     @Column(nullable = false)
     private String role; // 기본 권한은 USER
 
@@ -83,6 +89,22 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getRequestedNickname() {
+        return requestedNickname;
+    }
+
+    public void setRequestedNickname(String requestedNickname) {
+        this.requestedNickname = requestedNickname;
+    }
+
+    public String getIntroductionLink() {
+        return introductionLink;
+    }
+
+    public void setIntroductionLink(String introductionLink) {
+        this.introductionLink = introductionLink;
     }
 }
 

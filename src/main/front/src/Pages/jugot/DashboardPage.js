@@ -7,6 +7,7 @@ import Ranking from '../../Component/Ranking';
 import RealTrade from '../../Component/RealTrade';
 import PersonalTrade from '../../Component/PersonalTrade';
 import AuthModal from '../../Component/AuthModal';
+import UserInfoEdit from '../../Component/UserInfoEdit';
 import axios from 'axios';
 import config from '../../config';
 
@@ -15,6 +16,7 @@ import './jugot.css';
 const DashboardPage = () => {
     const [activeTab, setActiveTab] = useState('주곳리스트');
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [isUserInfoEditOpen, setIsUserInfoEditOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
     const [userRole, setUserRole] = useState(null);
@@ -33,7 +35,9 @@ const DashboardPage = () => {
                 setIsLoggedIn(true);
                 setUserInfo({
                     username: response.data.username,
-                    nickname: response.data.nickname
+                    nickname: response.data.nickname,
+                    requestedNickname: response.data.requestedNickname,
+                    introductionLink: response.data.introductionLink
                 });
                 setUserRole(response.data.role);
                 // localStorage에 role 저장하지 않음 (보안 강화)
@@ -75,9 +79,16 @@ const DashboardPage = () => {
         setIsLoggedIn(true);
         setUserInfo({
             username: data.username,
-            nickname: data.nickname
+            nickname: data.nickname,
+            requestedNickname: data.requestedNickname,
+            introductionLink: data.introductionLink
         });
         setUserRole(data.role || 'USER');
+    };
+
+    const handleUserInfoUpdate = async () => {
+        // 사용자 정보 업데이트 후 상태 갱신
+        await checkAuth();
     };
 
     const handleLogout = async () => {
@@ -136,6 +147,27 @@ const DashboardPage = () => {
                                     관리자 페이지로
                                 </Link>
                             )}
+                            <button 
+                                onClick={() => setIsUserInfoEditOpen(true)} 
+                                className="info-edit-btn"
+                                style={{
+                                    marginRight: '10px',
+                                    padding: '8px 16px',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                    color: 'white',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    borderRadius: '4px',
+                                    fontSize: '14px',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px'
+                                }}
+                                title="정보 수정"
+                            >
+                                <span>⚙️</span>
+                                <span>정보 수정</span>
+                            </button>
                             <span className="user-nickname">{userInfo?.nickname || '사용자'}님</span>
                             <button onClick={handleLogout} className="logout-btn">로그아웃</button>
                         </div>
@@ -152,6 +184,12 @@ const DashboardPage = () => {
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
                 onLoginSuccess={handleLoginSuccess}
+            />
+            <UserInfoEdit
+                isOpen={isUserInfoEditOpen}
+                onClose={() => setIsUserInfoEditOpen(false)}
+                userInfo={userInfo}
+                onUpdate={handleUserInfoUpdate}
             />
         </div>
     );

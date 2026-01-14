@@ -31,6 +31,12 @@ const AdminPage = () => {
     const [pausingId, setPausingId] = useState(null);
     const [resumingId, setResumingId] = useState(null);
 
+    // 닉네임 변경 요청 관련 상태
+    const [nicknameRequests, setNicknameRequests] = useState([]);
+    const [loadingNicknameRequests, setLoadingNicknameRequests] = useState(false);
+    const [approvingId, setApprovingId] = useState(null);
+    const [rejectingId, setRejectingId] = useState(null);
+
     useEffect(() => {
         // 권한 검증
         const checkAdminAccess = async () => {
@@ -170,8 +176,79 @@ const AdminPage = () => {
     useEffect(() => {
         if (userInfo) {
             fetchRealTradeList();
+            fetchNicknameRequests();
         }
     }, [userInfo]);
+
+    // 닉네임 변경 요청 목록 조회
+    const fetchNicknameRequests = async () => {
+        setLoadingNicknameRequests(true);
+        try {
+            const response = await axios.get(`${config.API_BASE_URL}/api/admin/nickname-requests`, {
+                withCredentials: true
+            });
+            if (response.data.success) {
+                setNicknameRequests(response.data.requests || []);
+            }
+        } catch (err) {
+            console.error('닉네임 변경 요청 목록 조회 오류:', err);
+            setNicknameRequests([]);
+        } finally {
+            setLoadingNicknameRequests(false);
+        }
+    };
+
+    // 닉네임 변경 요청 승인
+    const handleApproveNickname = async (userId) => {
+        if (!window.confirm('닉네임 변경을 승인하시겠습니까?')) {
+            return;
+        }
+
+        setApprovingId(userId);
+        try {
+            const response = await axios.put(
+                `${config.API_BASE_URL}/api/admin/nickname-requests/${userId}/approve`,
+                {},
+                { withCredentials: true }
+            );
+
+            if (response.data.success) {
+                alert('닉네임 변경이 승인되었습니다.');
+                fetchNicknameRequests(); // 목록 새로고침
+            }
+        } catch (err) {
+            console.error('닉네임 변경 승인 오류:', err);
+            alert(err.response?.data?.error || '닉네임 변경 승인 중 오류가 발생했습니다.');
+        } finally {
+            setApprovingId(null);
+        }
+    };
+
+    // 닉네임 변경 요청 거절
+    const handleRejectNickname = async (userId) => {
+        if (!window.confirm('닉네임 변경 요청을 거절하시겠습니까?')) {
+            return;
+        }
+
+        setRejectingId(userId);
+        try {
+            const response = await axios.put(
+                `${config.API_BASE_URL}/api/admin/nickname-requests/${userId}/reject`,
+                {},
+                { withCredentials: true }
+            );
+
+            if (response.data.success) {
+                alert('닉네임 변경 요청이 거절되었습니다.');
+                fetchNicknameRequests(); // 목록 새로고침
+            }
+        } catch (err) {
+            console.error('닉네임 변경 거절 오류:', err);
+            alert(err.response?.data?.error || '닉네임 변경 거절 중 오류가 발생했습니다.');
+        } finally {
+            setRejectingId(null);
+        }
+    };
 
     // 종목 선택
     const handleSelectStock = (stock) => {
@@ -881,6 +958,86 @@ const AdminPage = () => {
                                                     }}
                                                 >
                                                     {deletingId === trade.id ? '삭제 중...' : '삭제'}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+
+            {/* 닉네임 변경 요청 목록 */}
+            <div className="stock-table-container" style={{ marginTop: '20px' }}>
+                <h2>닉네임 변경 요청 목록</h2>
+                <p style={{ marginBottom: '15px', color: 'rgba(255, 255, 255, 0.8)' }}>
+                    사용자들의 닉네임 변경 요청을 승인하거나 거절할 수 있습니다.
+                </p>
+
+                {loadingNicknameRequests ? (
+                    <p style={{ color: '#fff', textAlign: 'center' }}>로딩 중...</p>
+                ) : nicknameRequests.length === 0 ? (
+                    <p style={{ color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center', padding: '20px' }}>
+                        현재 닉네임 변경 요청이 없습니다.
+                    </p>
+                ) : (
+                    <div style={{ overflowX: 'auto' }}>
+                        <table className="stock-table">
+                            <thead>
+                                <tr>
+                                    <th>사용자 ID</th>
+                                    <th>사용자명</th>
+                                    <th>현재 닉네임</th>
+                                    <th>변경 요청 닉네임</th>
+                                    <th>작업</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {nicknameRequests.map((request) => (
+                                    <tr key={request.id}>
+                                        <td>{request.id}</td>
+                                        <td>{request.username}</td>
+                                        <td>{request.currentNickname}</td>
+                                        <td>
+                                            <strong style={{ color: '#f39060' }}>
+                                                {request.requestedNickname}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                <button
+                                                    onClick={() => handleApproveNickname(request.id)}
+                                                    disabled={approvingId === request.id || rejectingId === request.id}
+                                                    style={{
+                                                        padding: '5px 10px',
+                                                        backgroundColor: 'rgba(76, 175, 80, 0.3)',
+                                                        border: '1px solid rgba(76, 175, 80, 0.5)',
+                                                        borderRadius: '4px',
+                                                        color: '#fff',
+                                                        cursor: (approvingId === request.id || rejectingId === request.id) ? 'not-allowed' : 'pointer',
+                                                        opacity: (approvingId === request.id || rejectingId === request.id) ? 0.6 : 1,
+                                                        fontSize: '12px'
+                                                    }}
+                                                >
+                                                    {approvingId === request.id ? '승인 중...' : '승인'}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleRejectNickname(request.id)}
+                                                    disabled={rejectingId === request.id || approvingId === request.id}
+                                                    style={{
+                                                        padding: '5px 10px',
+                                                        backgroundColor: 'rgba(244, 67, 54, 0.3)',
+                                                        border: '1px solid rgba(244, 67, 54, 0.5)',
+                                                        borderRadius: '4px',
+                                                        color: '#fff',
+                                                        cursor: (rejectingId === request.id || approvingId === request.id) ? 'not-allowed' : 'pointer',
+                                                        opacity: (rejectingId === request.id || approvingId === request.id) ? 0.6 : 1,
+                                                        fontSize: '12px'
+                                                    }}
+                                                >
+                                                    {rejectingId === request.id ? '거절 중...' : '거절'}
                                                 </button>
                                             </div>
                                         </td>

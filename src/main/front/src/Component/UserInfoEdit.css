@@ -1,0 +1,197 @@
+.user-info-edit-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.user-info-edit-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.user-info-edit-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 32px;
+    color: #666;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.user-info-edit-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.user-info-edit-content h2 {
+    margin: 0 0 30px 0;
+    color: #333;
+    text-align: center;
+    font-size: 28px;
+}
+
+.user-info-edit-tabs {
+    display: flex;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 30px;
+}
+
+.user-info-edit-tabs button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.user-info-edit-tabs button:hover {
+    color: #333;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.user-info-edit-tabs button.active {
+    color: #5b0060;
+    border-bottom-color: #5b0060;
+    font-weight: 600;
+}
+
+.user-info-edit-tab-content {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-info-edit-tab-content h3 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 20px;
+}
+
+.user-info-edit-form-group {
+    margin-bottom: 20px;
+}
+
+.user-info-edit-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.user-info-edit-form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.user-info-edit-form-group input:focus {
+    outline: none;
+    border-color: #5b0060;
+    box-shadow: 0 0 0 3px rgba(91, 0, 96, 0.1);
+}
+
+.user-info-edit-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(120deg, #5b0060, #870160);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.user-info-edit-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(91, 0, 96, 0.3);
+}
+
+.user-info-edit-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.user-info-edit-error {
+    color: #ff6b6b;
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-align: center;
+    padding: 10px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 8px;
+}
+
+.user-info-edit-success {
+    color: #51cf66;
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-align: center;
+    padding: 10px;
+    background: rgba(81, 207, 102, 0.1);
+    border-radius: 8px;
+}
+
+.user-info-edit-pending {
+    padding: 20px;
+    background: rgba(255, 193, 7, 0.1);
+    border: 2px solid rgba(255, 193, 7, 0.3);
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.user-info-edit-pending p {
+    margin: 8px 0;
+    color: #333;
+}
+
+.user-info-edit-pending strong {
+    color: #f57c00;
+}
