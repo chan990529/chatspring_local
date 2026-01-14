@@ -70,7 +70,19 @@ public class UserService {
 
         // 자기소개 링크 업데이트
         if (dto.getIntroductionLink() != null) {
-            user.setIntroductionLink(dto.getIntroductionLink());
+            String introductionLink = dto.getIntroductionLink();
+            
+            // 1. URL 형식 검증
+            if (!introductionLink.matches("^(https?://).*")) {
+                throw new RuntimeException("올바른 URL 형식이 아닙니다.");
+            }
+
+            // 2. Notion 도메인 검증
+            if (!introductionLink.contains("notion.so") && !introductionLink.contains("notion.site")) {
+                throw new RuntimeException("Notion 주소만 입력 가능합니다.");
+            }
+            
+            user.setIntroductionLink(introductionLink);
         }
 
         // 닉네임 변경 요청 처리
