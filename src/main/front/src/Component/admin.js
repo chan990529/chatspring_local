@@ -184,7 +184,7 @@ const AdminPage = () => {
     const fetchNicknameRequests = async () => {
         setLoadingNicknameRequests(true);
         try {
-            const response = await axios.get(`${config.API_BASE_URL}/api/admin/nickname-requests`, {
+            const response = await axios.get(`${config.API_BASE_URL}/api/user/admin/nickname-requests`, {
                 withCredentials: true
             });
             if (response.data.success) {
@@ -207,7 +207,7 @@ const AdminPage = () => {
         setApprovingId(userId);
         try {
             const response = await axios.put(
-                `${config.API_BASE_URL}/api/admin/nickname-requests/${userId}/approve`,
+                `${config.API_BASE_URL}/api/user/admin/nickname-requests/${userId}/approve`,
                 {},
                 { withCredentials: true }
             );
@@ -233,7 +233,7 @@ const AdminPage = () => {
         setRejectingId(userId);
         try {
             const response = await axios.put(
-                `${config.API_BASE_URL}/api/admin/nickname-requests/${userId}/reject`,
+                `${config.API_BASE_URL}/api/user/admin/nickname-requests/${userId}/reject`,
                 {},
                 { withCredentials: true }
             );
