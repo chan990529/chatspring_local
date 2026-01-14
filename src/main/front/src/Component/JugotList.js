@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import StockTable from './StockTable';
 
 const JugotList = () => {
@@ -6,6 +6,8 @@ const JugotList = () => {
     const [allWeeksData, setAllWeeksData] = useState({});
     const [loading, setLoading] = useState(true);
     const [isUpdating, setIsUpdating] = useState(false);
+    // 현재 표시할 월 인덱스 (0부터 시작)
+    const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
 
     // 최근 6개월의 year와 month 배열 생성
     // 현재 날짜를 함수 내부에서 계산하여 항상 최신 날짜를 사용
@@ -132,6 +134,60 @@ const JugotList = () => {
         return weekGroups;
     };
 
+    // 월별로 데이터를 그룹화하는 함수
+    const groupDataByMonth = (weekGroups) => {
+        const monthGroups = {};
+        
+        Object.entries(weekGroups).forEach(([weekKey, weekData]) => {
+            // "년 월-주차" 형식에서 월 부분 추출 (예: "2025년 1월-1주차" -> "2025년 1월")
+            const monthKey = weekKey.split('-')[0];
+            
+            if (!monthGroups[monthKey]) {
+                monthGroups[monthKey] = {};
+            }
+            
+            // 주차 키 추출 (예: "2025년 1월-1주차" -> "1주차")
+            const weekKeyOnly = weekKey.split('-').slice(1).join('-');
+            monthGroups[monthKey][weekKeyOnly] = weekData;
+        });
+        
+        return monthGroups;
+    };
+
+    // 월별로 그룹화된 데이터와 월 목록
+    const { monthGroups, monthList } = useMemo(() => {
+        const grouped = groupDataByMonth(allWeeksData);
+        const months = Object.keys(grouped).sort((a, b) => {
+            // "년 월" 형식에서 연도와 월 추출하여 정렬
+            const matchA = a.match(/(\d+)년\s*(\d+)월/);
+            const matchB = b.match(/(\d+)년\s*(\d+)월/);
+            
+            if (matchA && matchB) {
+                const yearA = parseInt(matchA[1]);
+                const monthA = parseInt(matchA[2]);
+                const yearB = parseInt(matchB[1]);
+                const monthB = parseInt(matchB[2]);
+                
+                if (yearA !== yearB) {
+                    return yearB - yearA; // 연도는 내림차순
+                }
+                return monthB - monthA; // 월은 내림차순
+            }
+            return 0;
+        });
+        
+        return { monthGroups: grouped, monthList: months };
+    }, [allWeeksData]);
+
+    // 현재 월의 데이터 가져오기
+    const currentMonthData = useMemo(() => {
+        if (monthList.length === 0 || currentMonthIndex >= monthList.length) {
+            return {};
+        }
+        const currentMonthKey = monthList[currentMonthIndex];
+        return monthGroups[currentMonthKey] || {};
+    }, [monthGroups, monthList, currentMonthIndex]);
+
     // 업데이트 상태 확인
     useEffect(() => {
         const checkUpdateStatus = async () => {
@@ -171,6 +227,7 @@ const JugotList = () => {
                 if (cachedData) {
                     console.log('캐시된 데이터를 사용합니다.');
                     setAllWeeksData(cachedData);
+                    setCurrentMonthIndex(0);
                     setLoading(false);
                     return;
                 }
@@ -209,6 +266,8 @@ const JugotList = () => {
                 setCachedData(weekGroups);
                 
                 setAllWeeksData(weekGroups);
+                // 데이터 로드 후 첫 번째 월(가장 최근 월)로 초기화
+                setCurrentMonthIndex(0);
                 
             } catch (error) {
                 console.error('Error fetching recent 6 months data:', error);
@@ -281,6 +340,25 @@ const JugotList = () => {
         );
     }
 
+    // 페이지네이션 핸들러
+    const handlePreviousMonth = () => {
+        if (currentMonthIndex > 0) {
+            setCurrentMonthIndex(currentMonthIndex - 1);
+        }
+    };
+
+    const handleNextMonth = () => {
+        if (currentMonthIndex < monthList.length - 1) {
+            setCurrentMonthIndex(currentMonthIndex + 1);
+        }
+    };
+
+    const handleMonthSelect = (index) => {
+        if (index >= 0 && index < monthList.length) {
+            setCurrentMonthIndex(index);
+        }
+    };
+
     return (
         <div>
             <h2>주곳리스트 (최근 6개월)</h2>
@@ -297,50 +375,106 @@ const JugotList = () => {
                     주가 업데이트 중입니다. 잠시만 기다려주세요...
                 </div>
             )}
-            {Object.keys(allWeeksData).length === 0 ? (
+            {monthList.length === 0 ? (
                 <p>최근 6개월 데이터가 없습니다.</p>
             ) : (
-                Object.entries(allWeeksData)
-                    .sort(([a], [b]) => {
-                        // "년 월-주차" 형식의 키를 내림차순으로 정렬하기 위한 비교 함수
-                        // 예: "2025년 1월-1주차"
-                        const partsA = a.split('-');
-                        const partsB = b.split('-');
-                        const monthPartA = partsA[0]; // "2025년 1월"
-                        const monthPartB = partsB[0]; // "2024년 12월"
-                        const weekA = partsA[1]; // "1주차"
-                        const weekB = partsB[1]; // "2주차"
+                <>
+                    {/* 페이지네이션 UI */}
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '10px',
+                        marginBottom: '30px',
+                        flexWrap: 'wrap'
+                    }}>
+                        <button
+                            onClick={handlePreviousMonth}
+                            disabled={currentMonthIndex === 0}
+                            style={{
+                                padding: '10px 20px',
+                                fontSize: '16px',
+                                backgroundColor: currentMonthIndex === 0 ? '#ccc' : '#007bff',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: currentMonthIndex === 0 ? 'not-allowed' : 'pointer',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            이전
+                        </button>
                         
-                        // 연도와 월 추출
-                        const yearMonthMatchA = monthPartA.match(/(\d+)년\s*(\d+)월/);
-                        const yearMonthMatchB = monthPartB.match(/(\d+)년\s*(\d+)월/);
+                        {/* 월별 페이지 번호 */}
+                        <div style={{
+                            display: 'flex',
+                            gap: '8px',
+                            flexWrap: 'wrap',
+                            justifyContent: 'center'
+                        }}>
+                            {monthList.map((month, index) => (
+                                <button
+                                    key={month}
+                                    onClick={() => handleMonthSelect(index)}
+                                    style={{
+                                        padding: '10px 16px',
+                                        fontSize: '16px',
+                                        backgroundColor: currentMonthIndex === index ? '#28a745' : '#6c757d',
+                                        color: '#fff',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                        fontWeight: currentMonthIndex === index ? 'bold' : 'normal',
+                                        minWidth: '100px'
+                                    }}
+                                >
+                                    {month}
+                                </button>
+                            ))}
+                        </div>
                         
-                        if (yearMonthMatchA && yearMonthMatchB) {
-                            const yearA = parseInt(yearMonthMatchA[1]);
-                            const monthA = parseInt(yearMonthMatchA[2]);
-                            const yearB = parseInt(yearMonthMatchB[1]);
-                            const monthB = parseInt(yearMonthMatchB[2]);
-                            
-                            if (yearA !== yearB) {
-                                return yearB - yearA; // 연도는 내림차순
-                            }
-                            if (monthA !== monthB) {
-                                return monthB - monthA; // 월은 내림차순
-                            }
-                        }
-                        
-                        // 주차 비교
-                        const weekNumA = parseInt(weekA.replace('주차', ''));
-                        const weekNumB = parseInt(weekB.replace('주차', ''));
-                        return weekNumB - weekNumA; // 주차도 내림차순
-                    })
-                    .map(([weekKey, weekData]) => (
-                        <StockTable 
-                            key={weekKey}
-                            title={`${weekKey} 주곳`} 
-                            data={weekData} 
-                        />
-                    ))
+                        <button
+                            onClick={handleNextMonth}
+                            disabled={currentMonthIndex === monthList.length - 1}
+                            style={{
+                                padding: '10px 20px',
+                                fontSize: '16px',
+                                backgroundColor: currentMonthIndex === monthList.length - 1 ? '#ccc' : '#007bff',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: currentMonthIndex === monthList.length - 1 ? 'not-allowed' : 'pointer',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            다음
+                        </button>
+                    </div>
+
+                    {/* 현재 월의 주차 데이터 표시 */}
+                    {Object.keys(currentMonthData).length === 0 ? (
+                        <p>{monthList[currentMonthIndex]} 데이터가 없습니다.</p>
+                    ) : (
+                        Object.entries(currentMonthData)
+                            .sort(([a], [b]) => {
+                                // 주차 번호 추출하여 내림차순 정렬
+                                const weekNumA = parseInt(a.replace('주차', ''));
+                                const weekNumB = parseInt(b.replace('주차', ''));
+                                return weekNumB - weekNumA;
+                            })
+                            .map(([weekKey, weekData]) => {
+                                const monthKey = monthList[currentMonthIndex];
+                                const fullWeekKey = `${monthKey}-${weekKey}`;
+                                return (
+                                    <StockTable 
+                                        key={fullWeekKey}
+                                        title={`${fullWeekKey} 주곳`} 
+                                        data={weekData} 
+                                    />
+                                );
+                            })
+                    )}
+                </>
             )}
         </div>
     );
