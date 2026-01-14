@@ -1,0 +1,15 @@
+/* 기본 스타일 */
+.container {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%; /* 모바일 등 작은 화면에서 꽉 차도록 */
+}
+
+/* PC 화면에서만 좌우 마진 적용 */
+@media (min-width: 1024px) {
+    .container {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 70%; /* PC 화면에서 콘텐츠 너비를 제한 */
+    }
+}

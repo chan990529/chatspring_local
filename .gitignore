@@ -1,0 +1,51 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+/logs/
+
+src/main/resources/application.properties
+
+src/main/java/com/chatspring/chatspring/WebSocketConfig.java
+
+src/main/java/com/chatspring/chatspring/WebConfig.java
+
+src/main/front/package.json
+
+src/main/front/package-lock.json
+
+src/main/front/.env
+
+src/main/front/src/config.js
+
+src/main/front/.gitignore
+

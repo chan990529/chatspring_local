@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9a18b42f.css",
+    "main.js": "/static/js/main.7f93cef4.js",
+    "static/js/542.26062f88.chunk.js": "/static/js/542.26062f88.chunk.js",
+    "static/media/NanumBarunGothic.ttf": "/static/media/NanumBarunGothic.06c821535273ae7f7a51.ttf",
+    "static/media/Pretendard-Medium.ttf": "/static/media/Pretendard-Medium.07e5324da6d2eb8817c1.ttf",
+    "static/media/Open.png": "/static/media/Open.d43ad4afb771e338d577.png",
+    "static/media/Empty.png": "/static/media/Empty.45e326db0b9cacbb82ae.png",
+    "static/media/Close.png": "/static/media/Close.2f396520e727e4e4ea03.png",
+    "service-worker.js": "/service-worker.js",
+    "static/media/Scalping_tutorial.md": "/static/media/Scalping_tutorial.d0b91824c45bd85fe2a2.md",
+    "index.html": "/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.9a18b42f.css",
+    "static/js/main.7f93cef4.js"
+  ]
+}

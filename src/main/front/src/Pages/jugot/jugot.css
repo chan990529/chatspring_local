@@ -1,0 +1,512 @@
+/* --- src/Pages/jugot/jugot.css --- */
+
+/* 1. 배경 및 기본 설정 - 전역 body 대신 .jugot-scope 컨테이너에만 적용 */
+.jugot-scope {
+    min-height: 100svh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(125deg, #0f0c29, #302b63, #24243e, #141e30, #243b55);
+    background-size: 200% 200%;
+    animation: gradient-animation 20s ease infinite;
+    color: #f0f0f0; /* 기본 폰트 색상을 밝게 설정 */
+}
+
+/* 배경 그라데이션 애니메이션 */
+@keyframes gradient-animation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* General App Styling (스코프) */
+.jugot-scope .App {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 2. 글래스모피즘 스타일: 헤더 */
+.jugot-scope .App-header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.jugot-scope .header-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.jugot-scope .header-link h1 {
+    margin: 0;
+    font-size: 2.2em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.jugot-scope .content {
+    margin-top: 20px;
+}
+
+/* 3. 네비게이터 (탭 메뉴) 스타일 */
+.jugot-scope .navigator {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 20px;
+}
+
+.jugot-scope .navigator button {
+    padding: 12px 25px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.jugot-scope .navigator button:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.jugot-scope .navigator button.active {
+    color: #ffffff;
+    border-bottom-color: #f39060;
+}
+
+/* 4. 글래스모피즘 스타일: 테이블 컨테이너 */
+.jugot-scope .stock-table-container {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    padding: 20px;
+    margin-top: 30px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.jugot-scope .stock-table-container h3 {
+    text-align: left;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+/* 5. 테이블 내부 스타일 */
+.jugot-scope .stock-table {
+    width: 100%;
+    min-width: 800px; /* 최소 너비 설정으로 가로 스크롤 유도 */
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.jugot-scope .stock-table th,
+.jugot-scope .stock-table td {
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 14px 15px;
+    text-align: left;
+}
+
+.jugot-scope .stock-table th {
+    background-color: rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+}
+
+/* RealTrade 및 다른 테이블을 위한 일반 스타일 (jugot-scope 밖에서도 작동) */
+.stock-table th {
+    white-space: nowrap;
+}
+
+.stock-table td {
+    white-space: nowrap;
+}
+
+.jugot-scope .stock-table td {
+    color: #e0e0e0;
+    white-space: nowrap;
+}
+
+.jugot-scope .stock-table td:first-child {
+    font-weight: bold;
+    color: #fff;
+}
+
+.jugot-scope .stock-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* 6. 정렬 아이콘 스타일 */
+.jugot-scope .sortable-header {
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px;
+}
+
+.jugot-scope .sortable-header:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.jugot-scope .sortable-header::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    margin-top: -4px;
+    border: 4px solid transparent;
+    opacity: 0.5;
+}
+
+.jugot-scope .sortable-header.sorted-asc::after {
+    border-bottom-color: #fff;
+    opacity: 1;
+}
+
+.jugot-scope .sortable-header.sorted-desc::after {
+    border-top-color: #fff;
+    opacity: 1;
+}
+
+/* 7. 글래스모피즘 스타일: 메인(홈) */
+.jugot-scope .home-page {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    padding: 60px 30px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.jugot-scope .home-page h2 {
+    font-size: 2.8em;
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.jugot-scope .home-page p {
+    font-size: 1.2em;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 40px;
+}
+
+.jugot-scope .dashboard-link {
+    display: inline-block;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+
+    /* [추가] 좌우 여백을 10px씩 줍니다 */
+    /* 이렇게 하면 버튼과 버튼 사이는 총 20px이 됩니다. */
+    margin: 0 10px;
+}
+
+
+
+.jugot-scope .dashboard-link:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+/* 8. 주식 가격 상승/하락 색상 스타일 */
+.jugot-scope .price-up {
+    color: #ff6b6b; /* 빨간색 - 상승 */
+    font-weight: bold;
+}
+
+.jugot-scope .price-down {
+    color: #4ecdc4; /* 청록색 - 하락 */
+    font-weight: bold;
+}
+
+/* 9. 랭킹 관련 스타일 */
+.jugot-scope .ranking-container {
+    padding: 20px;
+}
+
+.jugot-scope .ranking-title {
+    margin-bottom: 30px;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+/* 랭킹 탭 스타일 */
+.jugot-scope .ranking-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.jugot-scope .ranking-tabs button {
+    padding: 12px 25px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+}
+
+.jugot-scope .ranking-tabs button:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.jugot-scope .ranking-tabs button.active {
+    color: #ffffff;
+    border-bottom-color: #f39060;
+}
+
+.jugot-scope .ranking-tab-content {
+    margin-top: 20px;
+}
+
+.jugot-scope .ranking-flex-container {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.jugot-scope .ranking-flex-item {
+    flex: 1;
+    min-width: 500px;
+}
+
+.jugot-scope .ranking-flex-item .stock-table-container {
+    margin-bottom: 30px;
+}
+
+.jugot-scope .stock-table-container .empty-message {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+    padding: 20px;
+}
+
+.jugot-scope .stock-table th.text-right,
+.jugot-scope .stock-table td.text-right {
+    text-align: right;
+}
+
+.jugot-scope .stock-table td.text-right {
+    color: #e0e0e0;
+}
+
+.jugot-scope .rank-badge {
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.jugot-scope .rank-badge.gainers {
+    background-color: #ff6b6b;
+}
+
+.jugot-scope .rank-badge.losers {
+    background-color: #4ecdc4;
+}
+
+.jugot-scope .change-rate {
+    font-weight: bold;
+}
+
+.jugot-scope .change-rate.positive {
+    color: #ff6b6b;
+}
+
+.jugot-scope .change-rate.negative {
+    color: #4ecdc4;
+}
+
+.jugot-scope .week-key {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.jugot-scope .info-box {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.jugot-scope .info-box strong {
+    color: #fff;
+}
+
+.jugot-scope .info-box ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.jugot-scope .loading-container {
+    padding: 20px;
+}
+
+.jugot-scope .loading-container h2 {
+    color: #fff;
+}
+
+.jugot-scope .loading-container p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* 인증 헤더 스타일 */
+.jugot-scope .auth-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+}
+
+.jugot-scope .auth-header-content {
+    display: flex;
+    align-items: center;
+}
+
+.jugot-scope .login-btn,
+.jugot-scope .logout-btn {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.jugot-scope .login-btn:hover,
+.jugot-scope .logout-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.jugot-scope .user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.jugot-scope .user-nickname {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+}
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 768px) {
+    .jugot-scope .stock-table-container {
+        padding: 12px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+
+    .jugot-scope .stock-table-container h3 {
+        font-size: 16px;
+        padding-bottom: 8px;
+    }
+
+    .jugot-scope .stock-table {
+        min-width: 600px;
+        font-size: 12px;
+    }
+
+    .jugot-scope .stock-table th,
+    .jugot-scope .stock-table td {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .jugot-scope .stock-table th {
+        font-size: 11px;
+        padding: 8px 8px;
+    }
+
+    .jugot-scope .App {
+        padding: 10px;
+    }
+
+    .jugot-scope .App-header {
+        padding: 15px;
+    }
+
+    .jugot-scope .header-link h1 {
+        font-size: 1.5em;
+    }
+
+    .jugot-scope .navigator button {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .jugot-scope .stock-table {
+        min-width: 500px;
+        font-size: 11px;
+    }
+
+    .jugot-scope .stock-table th,
+    .jugot-scope .stock-table td {
+        padding: 6px 8px;
+        font-size: 11px;
+    }
+
+    .jugot-scope .stock-table th {
+        font-size: 10px;
+        padding: 6px 6px;
+    }
+
+    .jugot-scope .stock-table-container {
+        padding: 10px;
+    }
+
+    .jugot-scope .stock-table-container h3 {
+        font-size: 14px;
+    }
+}
