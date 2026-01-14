@@ -767,7 +767,7 @@ const RealTrade = () => {
                                     fontSize: '16px',
                                     fontWeight: 'bold'
                                 }}>
-                                    {selectedTrade.buyPrice ? `${formatNumber(selectedTrade.buyPrice)}원` : '-'}
+                                    {selectedTrade.startPrice ? `${formatNumber(selectedTrade.startPrice)}원` : '-'}
                                 </div>
                             </div>
 
@@ -884,22 +884,22 @@ const RealTrade = () => {
                                     flexDirection: 'column',
                                     gap: '8px'
                                 }}>
-                                    {/* 매수가 대비 수익률 */}
-                                    {selectedTrade.buyPrice && selectedTrade.currentPrice && (
+                                    {/* 시작 가격 대비 수익률 */}
+                                    {selectedTrade.startPrice && selectedTrade.currentPrice && (
                                         <div>
                                             <div style={{
                                                 color: 'rgba(255, 255, 255, 0.8)',
                                                 fontSize: '14px',
                                                 marginBottom: '4px'
                                             }}>
-                                                매수가 대비:
+                                                시작 가격 대비:
                                             </div>
                                             <div style={{
-                                                color: calculateProfitRate(selectedTrade.currentPrice, selectedTrade.buyPrice) >= 0 ? '#ff6b6b' : '#4ecdc4',
+                                                color: calculateProfitRate(selectedTrade.currentPrice, selectedTrade.startPrice) >= 0 ? '#ff6b6b' : '#4ecdc4',
                                                 fontSize: '18px',
                                                 fontWeight: 'bold'
                                             }}>
-                                                {formatProfitRate(calculateProfitRate(selectedTrade.currentPrice, selectedTrade.buyPrice))}
+                                                {formatProfitRate(calculateProfitRate(selectedTrade.currentPrice, selectedTrade.startPrice))}
                                             </div>
                                         </div>
                                     )}
@@ -922,7 +922,7 @@ const RealTrade = () => {
                                             </div>
                                         </div>
                                     )}
-                                    {(!selectedTrade.buyPrice || !selectedTrade.currentPrice) && 
+                                    {(!selectedTrade.startPrice || !selectedTrade.currentPrice) && 
                                      (!selectedTrade.averagePrice || !selectedTrade.currentPrice) && (
                                         <div style={{
                                             color: 'rgba(255, 255, 255, 0.6)',

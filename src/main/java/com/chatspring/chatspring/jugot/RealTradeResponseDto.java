@@ -20,6 +20,7 @@ public class RealTradeResponseDto {
     private Integer targetBuyCount;
     private Integer currentPrice;
     private Integer buyPrice;
+    private Integer startPrice;
     private Double finalReturnRate;
     private Integer finalPeriod;
 
@@ -149,6 +150,15 @@ public class RealTradeResponseDto {
 
     public void setBuyPrice(Integer buyPrice) {
         this.buyPrice = buyPrice;
+    }
+
+    @JsonProperty("startPrice")
+    public Integer getStartPrice() {
+        return startPrice;
+    }
+
+    public void setStartPrice(Integer startPrice) {
+        this.startPrice = startPrice;
     }
 
     @JsonProperty("finalReturnRate")

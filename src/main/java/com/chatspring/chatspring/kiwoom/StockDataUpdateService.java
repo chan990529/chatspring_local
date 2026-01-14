@@ -266,6 +266,13 @@ public class StockDataUpdateService {
                         newAveragePrice = closePrice;
                         totalBuyCount = newBuyCount;
                         
+                        // 첫 매수 시 startPrice 저장
+                        if (realTrade.getStartPrice() == null) {
+                            realTrade.setStartPrice(closePrice);
+                            logger.info("RealTrade {} 첫 매수 시작 가격 저장: startPrice={}",
+                                stockCode, closePrice);
+                        }
+                        
                         logger.info("RealTrade {} 평단가 초기화: 매수가={}, 매수횟수={}",
                             stockCode, newAveragePrice, totalBuyCount);
                     }

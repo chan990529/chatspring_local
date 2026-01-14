@@ -53,6 +53,9 @@ public class RealTrade {
     @Column(name = "current_price")
     private Integer currentPrice;
 
+    @Column(name = "start_price")
+    private Integer startPrice;
+
     @Column(name = "final_return_rate")
     private Double finalReturnRate;
 
@@ -174,6 +177,14 @@ public class RealTrade {
 
     public void setCurrentPrice(Integer currentPrice) {
         this.currentPrice = currentPrice;
+    }
+
+    public Integer getStartPrice() {
+        return startPrice;
+    }
+
+    public void setStartPrice(Integer startPrice) {
+        this.startPrice = startPrice;
     }
 
     public Double getFinalReturnRate() {

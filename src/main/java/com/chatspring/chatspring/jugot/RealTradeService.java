@@ -311,6 +311,7 @@ public class RealTradeService {
         dto.setCurrentBuyCount(realTrade.getCurrentBuyCount());
         dto.setTargetBuyCount(realTrade.getTargetBuyCount());
         dto.setCurrentPrice(realTrade.getCurrentPrice());
+        dto.setStartPrice(realTrade.getStartPrice());
         dto.setFinalReturnRate(realTrade.getFinalReturnRate());
         dto.setFinalPeriod(realTrade.getFinalPeriod());
         
