@@ -402,11 +402,11 @@
 }
 
 .jugot-scope .rank-badge.gainers {
-    background-color: #ff6b6b;
+    background-color: transparent;
 }
 
 .jugot-scope .rank-badge.losers {
-    background-color: #4ecdc4;
+    background-color: transparent;
 }
 
 .jugot-scope .change-rate {
