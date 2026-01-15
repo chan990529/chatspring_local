@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import config from '../config';
-import {
-    Alert,
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Tab,
-    Tabs,
-    TextField,
-    Typography
-} from '@mui/material';
+import './UserInfoEdit.css';
 
 const UserInfoEdit = ({ isOpen, onClose, userInfo, onUpdate }) => {
     const [activeTab, setActiveTab] = useState(1);
@@ -194,125 +182,166 @@ const UserInfoEdit = ({ isOpen, onClose, userInfo, onUpdate }) => {
     if (!isOpen) return null;
 
     return (
-        <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle>정보 수정</DialogTitle>
-            <DialogContent>
-                <Tabs
-                    value={activeTab}
-                    onChange={(event, value) => setActiveTab(value)}
-                    sx={{ mb: 2 }}
-                >
-                    <Tab value={1} label="기본 정보" />
-                    <Tab value={2} label="닉네임 변경" />
-                </Tabs>
+        <div className="user-info-edit-overlay" onClick={onClose}>
+            <div className="user-info-edit-content" onClick={(e) => e.stopPropagation()}>
+                <button className="user-info-edit-close" onClick={onClose}>×</button>
+                
+                <h2>정보 수정</h2>
 
-                {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-                {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+                {/* 탭 메뉴 */}
+                <div className="user-info-edit-tabs">
+                    <button
+                        className={activeTab === 1 ? 'active' : ''}
+                        onClick={() => setActiveTab(1)}
+                    >
+                        기본 정보
+                    </button>
+                    <button
+                        className={activeTab === 2 ? 'active' : ''}
+                        onClick={() => setActiveTab(2)}
+                    >
+                        닉네임 변경
+                    </button>
+                </div>
 
+                {/* 에러/성공 메시지 */}
+                {error && <div className="user-info-edit-error">{error}</div>}
+                {success && <div className="user-info-edit-success">{success}</div>}
+
+                {/* 탭 1: 기본 정보 */}
                 {activeTab === 1 && (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                        <Box component="form" onSubmit={handlePasswordChange} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <Typography variant="h6">비밀번호 변경</Typography>
-                            <TextField
-                                label="현재 비밀번호"
-                                type="password"
-                                value={currentPassword}
-                                onChange={(e) => setCurrentPassword(e.target.value)}
-                                placeholder="현재 비밀번호를 입력하세요"
-                            />
-                            <TextField
-                                label="새 비밀번호"
-                                type="password"
-                                value={newPassword}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    setNewPassword(value);
-                                    const passwordError = validatePassword(value);
-                                    setValidationErrors(prev => ({
-                                        ...prev,
-                                        newPassword: passwordError,
-                                        confirmPassword: validatePasswordConfirm(value, confirmPassword)
-                                    }));
-                                }}
-                                placeholder="새 비밀번호를 입력하세요"
-                                error={Boolean(validationErrors.newPassword)}
-                                helperText={validationErrors.newPassword || '영문/숫자/특수문자(@$!%*#?&) 포함, 8~20자'}
-                            />
-                            <TextField
-                                label="새 비밀번호 확인"
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    setConfirmPassword(value);
-                                    setValidationErrors(prev => ({
-                                        ...prev,
-                                        confirmPassword: validatePasswordConfirm(newPassword, value)
-                                    }));
-                                }}
-                                placeholder="새 비밀번호를 다시 입력하세요"
-                                error={Boolean(validationErrors.confirmPassword)}
-                                helperText={validationErrors.confirmPassword || ' '}
-                            />
-                            <Button type="submit" variant="contained" disabled={loading}>
+                    <div className="user-info-edit-tab-content">
+                        <form onSubmit={handlePasswordChange}>
+                            <h3>비밀번호 변경</h3>
+                            <div className="user-info-edit-form-group">
+                                <label>현재 비밀번호</label>
+                                <input
+                                    type="password"
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    placeholder="현재 비밀번호를 입력하세요"
+                                />
+                            </div>
+                            <div className="user-info-edit-form-group">
+                                <label>새 비밀번호</label>
+                                <input
+                                    type="password"
+                                    value={newPassword}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setNewPassword(value);
+                                        const passwordError = validatePassword(value);
+                                        setValidationErrors(prev => ({
+                                            ...prev,
+                                            newPassword: passwordError,
+                                            confirmPassword: validatePasswordConfirm(value, confirmPassword)
+                                        }));
+                                    }}
+                                    placeholder="새 비밀번호를 입력하세요"
+                                />
+                                <div className="user-info-edit-form-hint">영문/숫자/특수문자(@$!%*#?&) 포함, 8~20자</div>
+                                {validationErrors.newPassword && (
+                                    <div className="user-info-edit-validation-error">{validationErrors.newPassword}</div>
+                                )}
+                            </div>
+                            <div className="user-info-edit-form-group">
+                                <label>새 비밀번호 확인</label>
+                                <input
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setConfirmPassword(value);
+                                        setValidationErrors(prev => ({
+                                            ...prev,
+                                            confirmPassword: validatePasswordConfirm(newPassword, value)
+                                        }));
+                                    }}
+                                    placeholder="새 비밀번호를 다시 입력하세요"
+                                />
+                                {validationErrors.confirmPassword && (
+                                    <div className="user-info-edit-validation-error">{validationErrors.confirmPassword}</div>
+                                )}
+                            </div>
+                            <button
+                                type="submit"
+                                className="user-info-edit-submit-btn"
+                                disabled={loading}
+                            >
                                 {loading ? '처리 중...' : '비밀번호 변경'}
-                            </Button>
-                        </Box>
+                            </button>
+                        </form>
 
-                        <Box component="form" onSubmit={handleIntroductionLinkUpdate} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <Typography variant="h6">자기소개 링크</Typography>
-                            <TextField
-                                label="노션 링크 (선택사항)"
-                                type="url"
-                                value={introductionLink}
-                                onChange={(e) => setIntroductionLink(e.target.value)}
-                                placeholder="https://..."
-                            />
-                            <Button type="submit" variant="outlined" disabled={loading}>
+                        <form onSubmit={handleIntroductionLinkUpdate} style={{ marginTop: '30px' }}>
+                            <h3>자기소개 링크</h3>
+                            <div className="user-info-edit-form-group">
+                                <label>노션 링크 (선택사항)</label>
+                                <input
+                                    type="url"
+                                    value={introductionLink}
+                                    onChange={(e) => setIntroductionLink(e.target.value)}
+                                    placeholder="https://..."
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="user-info-edit-submit-btn"
+                                disabled={loading}
+                            >
                                 {loading ? '저장 중...' : '저장'}
-                            </Button>
-                        </Box>
-                    </Box>
+                            </button>
+                        </form>
+                    </div>
                 )}
 
+                {/* 탭 2: 닉네임 변경 */}
                 {activeTab === 2 && (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <Typography variant="h6">닉네임 변경 신청</Typography>
+                    <div className="user-info-edit-tab-content">
+                        <h3>닉네임 변경 신청</h3>
+                        
                         {userInfo?.requestedNickname ? (
-                            <Alert severity="info">
-                                <Typography sx={{ fontWeight: 700 }}>승인 대기 중입니다</Typography>
-                                <Typography>신청한 닉네임: {userInfo.requestedNickname}</Typography>
-                                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                            <div className="user-info-edit-pending">
+                                <p><strong>승인 대기 중입니다</strong></p>
+                                <p>신청한 닉네임: <strong>{userInfo.requestedNickname}</strong></p>
+                                <p style={{ fontSize: '14px', color: '#666', marginTop: '10px' }}>
                                     관리자 승인 후 변경됩니다.
-                                </Typography>
-                            </Alert>
+                                </p>
+                            </div>
                         ) : (
                             <>
-                                <TextField
-                                    label="현재 닉네임"
-                                    value={userInfo?.nickname || ''}
-                                    disabled
-                                />
-                                <Box component="form" onSubmit={handleNicknameRequest} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                    <TextField
-                                        label="변경할 닉네임"
-                                        value={requestedNickname}
-                                        onChange={(e) => setRequestedNickname(e.target.value)}
-                                        placeholder="새 닉네임을 입력하세요"
+                                <div className="user-info-edit-form-group">
+                                    <label>현재 닉네임</label>
+                                    <input
+                                        type="text"
+                                        value={userInfo?.nickname || ''}
+                                        disabled
+                                        style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
                                     />
-                                    <Button type="submit" variant="contained" disabled={requesting}>
+                                </div>
+                                <form onSubmit={handleNicknameRequest}>
+                                    <div className="user-info-edit-form-group">
+                                        <label>변경할 닉네임</label>
+                                        <input
+                                            type="text"
+                                            value={requestedNickname}
+                                            onChange={(e) => setRequestedNickname(e.target.value)}
+                                            placeholder="새 닉네임을 입력하세요"
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="user-info-edit-submit-btn"
+                                        disabled={requesting}
+                                    >
                                         {requesting ? '요청 중...' : '변경 신청'}
-                                    </Button>
-                                </Box>
+                                    </button>
+                                </form>
                             </>
                         )}
-                    </Box>
+                    </div>
                 )}
-            </DialogContent>
-            <DialogActions sx={{ px: 3, pb: 2 }}>
-                <Button onClick={onClose}>닫기</Button>
-            </DialogActions>
-        </Dialog>
+            </div>
+        </div>
     );
 };
 

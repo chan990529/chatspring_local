@@ -11,17 +11,8 @@ import UserInfoEdit from '../../Component/UserInfoEdit';
 import RefreshableGrid from '../scalping/RefreshableGrid';
 import axios from 'axios';
 import config from '../../config';
-import {
-    AppBar,
-    Box,
-    Button,
-    IconButton,
-    Stack,
-    Toolbar,
-    Tooltip,
-    Typography
-} from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
+
+import './jugot.css';
 
 const DashboardPage = () => {
     const [activeTab, setActiveTab] = useState('주곳리스트');
@@ -159,46 +150,47 @@ const DashboardPage = () => {
     };
 
     return (
-        <Box>
-            <AppBar position="static" color="default" elevation={0}>
-                <Toolbar sx={{ justifyContent: 'space-between' }}>
-                    <Typography variant="h6">Jugot</Typography>
+        <div>
+            <div className="auth-header">
+                <div className="auth-header-content">
                     {isLoggedIn ? (
-                        <Stack direction="row" spacing={1} alignItems="center">
+                        <div className="user-info">
                             {userRole === 'pingddak' && (
-                                <Button component={Link} to="/admin" variant="outlined" size="small">
+                                <Link 
+                                    to="/admin" 
+                                    className="admin-link-btn"
+                                >
                                     관리자 페이지로
-                                </Button>
+                                </Link>
                             )}
-                            <Tooltip title="정보 수정">
-                                <IconButton onClick={() => setIsUserInfoEditOpen(true)}>
-                                    <SettingsIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Typography variant="body2" sx={{ mr: 1 }}>
-                                {userInfo?.nickname || '사용자'}님
-                            </Typography>
-                            <Button onClick={() => navigate('/Scalping')} variant="outlined" size="small">
+                            <button 
+                                onClick={() => setIsUserInfoEditOpen(true)} 
+                                className="info-edit-btn"
+                                title="정보 수정"
+                            >
+                                <span>⚙️</span>
+                                <span>정보 수정</span>
+                            </button>
+                            <span className="user-nickname">{userInfo?.nickname || '사용자'}님</span>
+                            <button onClick={() => navigate('/Scalping')} className="research-btn">
                                 연구소로
-                            </Button>
-                            <Button onClick={handleLogout} variant="contained" size="small">
-                                로그아웃
-                            </Button>
-                        </Stack>
+                            </button>
+                            <button onClick={handleLogout} className="logout-btn">로그아웃</button>
+                        </div>
                     ) : (
-                        <Stack direction="row" spacing={1} alignItems="center">
-                            <Button onClick={() => setIsAuthModalOpen(true)} variant="contained" size="small">
+                        <div className="auth-buttons">
+                            <button onClick={() => setIsAuthModalOpen(true)} className="login-btn">
                                 로그인 / 회원가입
-                            </Button>
-                            <Button onClick={() => navigate('/Scalping')} variant="outlined" size="small">
+                            </button>
+                            <button onClick={() => navigate('/Scalping')} className="research-btn">
                                 연구소로
-                            </Button>
-                        </Stack>
+                            </button>
+                        </div>
                     )}
-                </Toolbar>
-            </AppBar>
+                </div>
+            </div>
             <Navigator activeTab={activeTab} setActiveTab={setActiveTab} />
-            <Box component="main">{renderContent()}</Box>
+            <main className="content">{renderContent()}</main>
             <RefreshableGrid onRefresh={handleRefresh} />
             <AuthModal
                 isOpen={isAuthModalOpen}
@@ -211,7 +203,7 @@ const DashboardPage = () => {
                 userInfo={userInfo}
                 onUpdate={handleUserInfoUpdate}
             />
-        </Box>
+        </div>
     );
 };
 

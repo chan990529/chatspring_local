@@ -1,27 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import config from '../config';
-import {
-    Alert,
-    Box,
-    Chip,
-    CircularProgress,
-    Divider,
-    List,
-    ListItemButton,
-    ListItemText,
-    Paper,
-    Stack,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography,
-    useMediaQuery,
-    useTheme
-} from '@mui/material';
+import '../Pages/jugot/jugot.css';
 
 const PersonalTrade = () => {
     const [participants, setParticipants] = useState([]);
@@ -30,8 +10,16 @@ const PersonalTrade = () => {
     const [loadingParticipants, setLoadingParticipants] = useState(true);
     const [loadingTrades, setLoadingTrades] = useState(false);
     const [error, setError] = useState('');
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    // 반응형 처리
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // 참여자 목록 조회
     const fetchParticipants = async () => {
@@ -182,161 +170,257 @@ const PersonalTrade = () => {
 
     if (loadingParticipants) {
         return (
-            <Box sx={{ px: 2, py: 3 }}>
-                <Typography variant="h5" sx={{ mb: 2 }}>
-                    Personal Trade
-                </Typography>
-                <Stack direction="row" alignItems="center" spacing={1}>
-                    <CircularProgress size={20} />
-                    <Typography>로딩 중...</Typography>
-                </Stack>
-            </Box>
+            <div className="content">
+                <h2>Personal Trade</h2>
+                <p>로딩 중...</p>
+            </div>
         );
     }
 
     if (error && participants.length === 0) {
         return (
-            <Box sx={{ px: 2, py: 3 }}>
-                <Typography variant="h5" sx={{ mb: 2 }}>
-                    Personal Trade
-                </Typography>
-                <Alert severity="error">{error}</Alert>
-            </Box>
+            <div className="content">
+                <h2>Personal Trade</h2>
+                <p style={{ color: '#ff6b6b' }}>{error}</p>
+            </div>
         );
     }
 
     return (
-        <Box sx={{ px: 2, py: 3 }}>
-            <Typography color="text.secondary" sx={{ mb: 2 }}>
+        <div className="content">
+            <p style={{ marginBottom: '20px', color: 'rgba(255, 255, 255, 0.8)' }}>
                 참여자를 선택하면 해당 참여자가 참여 중인 실매매 현황을 확인할 수 있습니다.
-            </Typography>
+            </p>
 
-            <Stack direction={isMobile ? 'column' : 'row'} spacing={2}>
-                <Paper variant="outlined" sx={{ flex: isMobile ? 1 : '0 0 320px', p: 2, maxHeight: 600, overflowY: 'auto' }}>
-                    <Typography variant="h6" sx={{ mb: 1 }}>
+            <div style={{
+                display: 'flex',
+                gap: '20px',
+                flexDirection: isMobile ? 'column' : 'row'
+            }}>
+                {/* 좌측: 참여자 목록 */}
+                <div style={{
+                    flex: isMobile ? '1' : '0 0 300px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    borderRadius: '15px',
+                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                    boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)',
+                    padding: '20px',
+                    maxHeight: '600px',
+                    overflowY: 'auto'
+                }}>
+                    <h3 style={{
+                        marginTop: '0',
+                        marginBottom: '15px',
+                        color: '#fff',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+                        paddingBottom: '10px'
+                    }}>
                         참여자 목록
-                    </Typography>
-                    <Divider sx={{ mb: 1 }} />
+                    </h3>
                     {participants.length === 0 ? (
-                        <Typography color="text.secondary" align="center" sx={{ py: 3 }}>
+                        <p style={{ color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center', padding: '20px' }}>
                             참여자가 없습니다.
-                        </Typography>
+                        </p>
                     ) : (
-                        <List dense disablePadding>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             {participants.map((participant, index) => (
-                                <ListItemButton
+                                <div
                                     key={index}
-                                    selected={selectedParticipant === participant.name}
                                     onClick={() => handleParticipantClick(participant.name)}
-                                    sx={{ borderRadius: 1, mb: 0.5 }}
-                                >
-                                    <ListItemText
-                                        primary={participant.name}
-                                        secondary={
-                                            <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                참여 {participant.totalCount}건
-                                                {participant.activeCount > 0 && (
-                                                    <Chip size="small" color="success" label={`진행중 ${participant.activeCount}건`} />
-                                                )}
-                                            </Box>
+                                    style={{
+                                        padding: '12px 15px',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        backgroundColor: selectedParticipant === participant.name
+                                            ? 'rgba(255, 255, 255, 0.2)'
+                                            : 'rgba(255, 255, 255, 0.05)',
+                                        border: selectedParticipant === participant.name
+                                            ? '2px solid rgba(255, 255, 255, 0.4)'
+                                            : '1px solid rgba(255, 255, 255, 0.1)',
+                                        color: '#fff'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        if (selectedParticipant !== participant.name) {
+                                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
                                         }
-                                    />
-                                </ListItemButton>
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        if (selectedParticipant !== participant.name) {
+                                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                                        }
+                                    }}
+                                >
+                                    <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                                        {participant.name}
+                                    </div>
+                                    <div style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.7)' }}>
+                                        참여 {participant.totalCount}건
+                                        {participant.activeCount > 0 && (
+                                            <span style={{ marginLeft: '8px', color: 'rgba(76, 175, 80, 0.9)' }}>
+                                                · 진행중 {participant.activeCount}건
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
                             ))}
-                        </List>
+                        </div>
                     )}
-                </Paper>
+                </div>
 
-                <Paper variant="outlined" sx={{ flex: 1, p: 2 }}>
+                {/* 우측: 선택된 참여자의 실매매 목록 */}
+                <div style={{
+                    flex: '1',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    borderRadius: '15px',
+                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                    boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)',
+                    padding: '20px'
+                }}>
                     {!selectedParticipant ? (
-                        <Box sx={{ textAlign: 'center', py: 6, color: 'text.secondary' }}>
-                            참여자를 선택하면 참여 중인 실매매가 표시됩니다.
-                        </Box>
+                        <div style={{
+                            textAlign: 'center',
+                            padding: '60px 20px',
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }}>
+                            <p style={{ fontSize: '16px', margin: '0' }}>
+                                참여자를 선택하면 참여 중인 실매매가 표시됩니다.
+                            </p>
+                        </div>
                     ) : loadingTrades ? (
-                        <Stack direction="row" alignItems="center" spacing={1} sx={{ py: 6, justifyContent: 'center' }}>
-                            <CircularProgress size={20} />
-                            <Typography>로딩 중...</Typography>
-                        </Stack>
+                        <div style={{
+                            textAlign: 'center',
+                            padding: '60px 20px',
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }}>
+                            <p>로딩 중...</p>
+                        </div>
                     ) : error ? (
-                        <Alert severity="error">{error}</Alert>
+                        <div style={{
+                            textAlign: 'center',
+                            padding: '60px 20px',
+                            color: '#ff6b6b'
+                        }}>
+                            <p>{error}</p>
+                        </div>
                     ) : trades.length === 0 ? (
-                        <Box sx={{ textAlign: 'center', py: 6, color: 'text.secondary' }}>
-                            <Typography>
-                                <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>
-                                    {selectedParticipant}
-                                </Box>
-                                님이 참여 중인 실매매가 없습니다.
-                            </Typography>
-                        </Box>
+                        <div style={{
+                            textAlign: 'center',
+                            padding: '60px 20px',
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }}>
+                            <p style={{ fontSize: '16px', margin: '0' }}>
+                                <strong style={{ color: '#fff' }}>{selectedParticipant}</strong>님이 참여 중인 실매매가 없습니다.
+                            </p>
+                        </div>
                     ) : (
-                        <Box>
-                            <Typography variant="h6" sx={{ mb: 1 }}>
+                        <div>
+                            <h3 style={{
+                                marginTop: '0',
+                                marginBottom: '15px',
+                                color: '#fff',
+                                borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+                                paddingBottom: '10px'
+                            }}>
                                 {selectedParticipant}님의 실매매 현황
-                            </Typography>
-                            <Divider sx={{ mb: 1 }} />
-                            <TableContainer>
-                                <Table size="small">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>종목명</TableCell>
-                                            <TableCell>종목코드</TableCell>
-                                            <TableCell>시작일</TableCell>
-                                            <TableCell>수익률</TableCell>
-                                            <TableCell>상태</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
+                            </h3>
+                            <div className="stock-table-container" style={{ marginTop: '0', padding: '0' }}>
+                                <table className="stock-table">
+                                    <thead>
+                                        <tr>
+                                            <th>종목명</th>
+                                            <th>종목코드</th>
+                                            <th>시작일</th>
+                                            <th>수익률</th>
+                                            <th>상태</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         {trades.map((trade) => {
                                             const returnRate = calculateReturnRate(trade);
                                             const returnRateFormatted = formatReturnRate(returnRate);
-                                            const returnRateColor = returnRate != null
+                                            const returnRateColor = returnRate != null 
                                                 ? (returnRate >= 0 ? '#ff6b6b' : '#4ecdc4')
-                                                : 'text.secondary';
-
+                                                : 'rgba(255, 255, 255, 0.7)';
+                                            
                                             return (
-                                                <TableRow key={trade.id} hover>
-                                                    <TableCell>{trade.stockName || '-'}</TableCell>
-                                                    <TableCell>{trade.stockCode || '-'}</TableCell>
-                                                    <TableCell>{formatDate(trade.startDate)}</TableCell>
-                                                    <TableCell sx={{ color: returnRateColor, fontWeight: 700 }}>
+                                                <tr key={trade.id}>
+                                                    <td>{trade.stockName || '-'}</td>
+                                                    <td>{trade.stockCode || '-'}</td>
+                                                    <td>{formatDate(trade.startDate)}</td>
+                                                    <td style={{ 
+                                                        color: returnRateColor,
+                                                        fontWeight: 'bold'
+                                                    }}>
                                                         {returnRateFormatted}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Chip
-                                                            size="small"
-                                                            label={trade.status === 'ACTIVE' ? '진행중' : trade.status === 'COMPLETED' ? '완료' : trade.status}
-                                                            color={trade.status === 'ACTIVE' ? 'success' : 'default'}
-                                                            variant="outlined"
-                                                        />
-                                                    </TableCell>
-                                                </TableRow>
+                                                    </td>
+                                                    <td>
+                                                        <span style={{
+                                                            padding: '4px 8px',
+                                                            borderRadius: '4px',
+                                                            backgroundColor: trade.status === 'ACTIVE'
+                                                                ? 'rgba(76, 175, 80, 0.3)'
+                                                                : trade.status === 'COMPLETED'
+                                                                ? 'rgba(158, 158, 158, 0.3)'
+                                                                : 'rgba(158, 158, 158, 0.3)',
+                                                            color: '#fff',
+                                                            fontSize: '12px'
+                                                        }}>
+                                                            {trade.status === 'ACTIVE' ? '진행중' : trade.status === 'COMPLETED' ? '완료' : trade.status}
+                                                        </span>
+                                                    </td>
+                                                </tr>
                                             );
                                         })}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-
-                            {trades.length > 0 && (() => {
-                                const totalReturnRate = calculateTotalReturnRate();
-                                const totalReturnRateFormatted = formatReturnRate(totalReturnRate);
-                                const totalReturnRateColor = totalReturnRate != null
-                                    ? (totalReturnRate >= 0 ? '#ff6b6b' : '#4ecdc4')
-                                    : 'text.secondary';
-
-                                return (
-                                    <Paper variant="outlined" sx={{ mt: 2, p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                        <Typography sx={{ fontWeight: 700 }}>종합수익률</Typography>
-                                        <Typography sx={{ fontWeight: 700, color: totalReturnRateColor }}>
-                                            {totalReturnRateFormatted}
-                                        </Typography>
-                                    </Paper>
-                                );
-                            })()}
-                        </Box>
+                                    </tbody>
+                                </table>
+                                
+                                {/* 종합수익률 표시 */}
+                                {trades.length > 0 && (() => {
+                                    const totalReturnRate = calculateTotalReturnRate();
+                                    const totalReturnRateFormatted = formatReturnRate(totalReturnRate);
+                                    const totalReturnRateColor = totalReturnRate != null 
+                                        ? (totalReturnRate >= 0 ? '#ff6b6b' : '#4ecdc4')
+                                        : 'rgba(255, 255, 255, 0.7)';
+                                    
+                                    return (
+                                        <div style={{
+                                            marginTop: '20px',
+                                            padding: '15px',
+                                            background: 'rgba(255, 255, 255, 0.05)',
+                                            borderRadius: '8px',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <div style={{ 
+                                                fontSize: '16px', 
+                                                fontWeight: 'bold',
+                                                color: '#fff'
+                                            }}>
+                                                종합수익률
+                                            </div>
+                                            <div style={{ 
+                                                fontSize: '20px', 
+                                                fontWeight: 'bold',
+                                                color: totalReturnRateColor
+                                            }}>
+                                                {totalReturnRateFormatted}
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
+                            </div>
+                        </div>
                     )}
-                </Paper>
-            </Stack>
-        </Box>
+                </div>
+            </div>
+        </div>
     );
 };
 

@@ -1,16 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import {
-    Box,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TableSortLabel,
-    Typography
-} from '@mui/material';
 
 const StockTable = ({ title, data }) => {
     // 정렬 상태를 관리합니다.
@@ -108,6 +96,13 @@ const StockTable = ({ title, data }) => {
     };
 
     // 현재 정렬 상태에 따라 CSS 클래스를 반환하는 함수
+    const getSortClassName = (name) => {
+        if (!sortConfig.key || sortConfig.key !== name) {
+            return '';
+        }
+        return sortConfig.direction === 'ascending' ? 'sorted-asc' : 'sorted-desc';
+    };
+
     // 테이블 헤더 데이터 (key는 데이터 객체의 키와 일치해야 합니다)
     const headers = [
         { label: '종목명', key: 'name' },
@@ -176,67 +171,51 @@ const StockTable = ({ title, data }) => {
         
         if (formattedPercentage) {
             const isPositive = percentage >= 0;
+            const colorClass = isPositive ? 'price-up' : 'price-down';
             return (
-                <Box component="span">
+                <span>
                     {formattedPrice}
-                    <Box
-                        component="span"
-                        sx={{
-                            ml: 0.5,
-                            color: isPositive ? '#ff6b6b' : '#4ecdc4',
-                            fontWeight: 600
-                        }}
-                    >
-                        ({formattedPercentage})
-                    </Box>
-                </Box>
+                    <span className={colorClass}>({formattedPercentage})</span>
+                </span>
             );
         }
         return formattedPrice;
     };
 
     return (
-        <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" sx={{ mb: 1.5 }}>
-                {title}
-            </Typography>
-            <TableContainer component={Paper} variant="outlined">
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            {headers.map(({ label, key }) => (
-                                <TableCell
-                                    key={key}
-                                    sortDirection={sortConfig.key === key ? (sortConfig.direction === 'ascending' ? 'asc' : 'desc') : false}
-                                >
-                                    <TableSortLabel
-                                        active={sortConfig.key === key}
-                                        direction={sortConfig.direction === 'ascending' ? 'asc' : 'desc'}
-                                        onClick={() => requestSort(key)}
-                                    >
-                                        {label}
-                                    </TableSortLabel>
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {sortedData.map((item, index) => (
-                            <TableRow key={index} hover>
-                                <TableCell>{item.name}</TableCell>
-                                <TableCell>{formatDate(item.captureDate)}</TableCell>
-                                <TableCell>{formatDaysElapsed(item.daysElapsed)}</TableCell>
-                                <TableCell>{formatNumber(item.capturePrice)}</TableCell>
-                                <TableCell>{formatPriceWithPercentage(item.currentPrice, item.capturePrice)}</TableCell>
-                                <TableCell>{formatPriceWithPercentage(item.highestPrice, item.capturePrice)}</TableCell>
-                                <TableCell>{formatPriceWithPercentage(item.lowestPrice, item.capturePrice)}</TableCell>
-                                <TableCell>{item.marketType || '-'}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Box>
+        <div className="stock-table-container">
+            <h3>{title}</h3>
+            <table className="stock-table">
+                <thead>
+                <tr>
+                    {headers.map(({ label, key }) => (
+                        <th
+                            key={key}
+                            onClick={() => requestSort(key)}
+                            className={`sortable-header ${getSortClassName(key)}`}
+                        >
+                            {label}
+                        </th>
+                    ))}
+                </tr>
+                </thead>
+                <tbody>
+                {/* 정렬된 데이터를 사용하여 테이블 행을 렌더링합니다. */}
+                {sortedData.map((item, index) => (
+                    <tr key={index}>
+                        <td>{item.name}</td>
+                        <td>{formatDate(item.captureDate)}</td>
+                        <td>{formatDaysElapsed(item.daysElapsed)}</td>
+                        <td>{formatNumber(item.capturePrice)}</td>
+                        <td>{formatPriceWithPercentage(item.currentPrice, item.capturePrice)}</td>
+                        <td>{formatPriceWithPercentage(item.highestPrice, item.capturePrice)}</td>
+                        <td>{formatPriceWithPercentage(item.lowestPrice, item.capturePrice)}</td>
+                        <td>{item.marketType || '-'}</td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        </div>
     );
 };
 

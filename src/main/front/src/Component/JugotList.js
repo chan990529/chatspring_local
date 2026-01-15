@@ -1,16 +1,4 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import {
-    Alert,
-    Box,
-    CircularProgress,
-    IconButton,
-    Stack,
-    Tab,
-    Tabs,
-    Typography
-} from '@mui/material';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import StockTable from './StockTable';
 
 const JugotList = () => {
@@ -294,27 +282,61 @@ const JugotList = () => {
 
     if (loading) {
         return (
-            <Box sx={{ px: 2, py: 3 }}>
-                <Typography variant="h5" sx={{ mb: 3 }}>
-                    주곳리스트 (최근 6개월)
-                </Typography>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 1.5,
-                        minHeight: 280
-                    }}
-                >
-                    <CircularProgress color="inherit" />
-                    <Typography variant="h6">주곳 로딩중..</Typography>
-                    <Typography variant="body2" color="text.secondary">
+            <div>
+                <h2>주곳리스트 (최근 6개월)</h2>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '60px 20px',
+                    marginTop: '40px',
+                    minHeight: '300px'
+                }}>
+                    <style>
+                        {`
+                            @keyframes spin {
+                                0% { transform: rotate(0deg); }
+                                100% { transform: rotate(360deg); }
+                            }
+                            @keyframes pulse {
+                                0%, 100% { opacity: 1; }
+                                50% { opacity: 0.5; }
+                            }
+                            .spinner {
+                                border: 4px solid rgba(255, 255, 255, 0.3);
+                                border-top: 4px solid #ffffff;
+                                border-radius: 50%;
+                                width: 50px;
+                                height: 50px;
+                                animation: spin 1s linear infinite;
+                                margin-bottom: 20px;
+                            }
+                            .loading-text {
+                                animation: pulse 1.5s ease-in-out infinite;
+                            }
+                        `}
+                    </style>
+                    <div className="spinner"></div>
+                    <div className="loading-text" style={{
+                        fontSize: '24px',
+                        fontWeight: '600',
+                        color: '#ffffff',
+                        letterSpacing: '1px',
+                        textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+                    }}>
+                        주곳 로딩중..
+                    </div>
+                    <div style={{
+                        fontSize: '14px',
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        marginTop: '12px',
+                        fontWeight: '300'
+                    }}>
                         데이터를 불러오는 중입니다
-                    </Typography>
-                </Box>
-            </Box>
+                    </div>
+                </div>
+            </div>
         );
     }
 
@@ -338,52 +360,64 @@ const JugotList = () => {
     };
 
     return (
-        <Box sx={{ px: 2, py: 3 }}>
-            <Typography variant="h5" sx={{ mb: 2 }}>
-                주곳리스트 (최근 6개월)
-            </Typography>
+        <div>
+            <h2>주곳리스트 (최근 6개월)</h2>
             {isUpdating && (
-                <Alert severity="warning" sx={{ mb: 2 }}>
+                <div style={{
+                    padding: '12px',
+                    marginBottom: '20px',
+                    backgroundColor: '#ff9800',
+                    color: '#fff',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    fontWeight: 'bold'
+                }}>
                     주가 업데이트 중입니다. 잠시만 기다려주세요...
-                </Alert>
+                </div>
             )}
             {monthList.length === 0 ? (
-                <Typography>최근 6개월 데이터가 없습니다.</Typography>
+                <p>최근 6개월 데이터가 없습니다.</p>
             ) : (
                 <>
-                    <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-                        <IconButton
+                    {/* 페이지네이션 UI */}
+                    <div className="pagination-container">
+                        <button
+                            className="pagination-nav-button"
                             onClick={handlePreviousMonth}
                             disabled={currentMonthIndex === 0}
-                            aria-label="이전 월"
                         >
-                            <ChevronLeftIcon />
-                        </IconButton>
-                        <Tabs
-                            value={currentMonthIndex}
-                            onChange={(event, newValue) => handleMonthSelect(newValue)}
-                            variant="scrollable"
-                            scrollButtons="auto"
-                            sx={{ flex: 1 }}
-                        >
+                            이전
+                        </button>
+                        
+                        {/* 월별 페이지 번호 */}
+                        <div className="pagination-month-buttons">
                             {monthList.map((month, index) => (
-                                <Tab key={month} label={month} value={index} />
+                                <button
+                                    key={month}
+                                    className={`pagination-month-button ${currentMonthIndex === index ? 'active' : ''}`}
+                                    onClick={() => handleMonthSelect(index)}
+                                >
+                                    {month}
+                                </button>
                             ))}
-                        </Tabs>
-                        <IconButton
+                        </div>
+                        
+                        <button
+                            className="pagination-nav-button"
                             onClick={handleNextMonth}
                             disabled={currentMonthIndex === monthList.length - 1}
-                            aria-label="다음 월"
                         >
-                            <ChevronRightIcon />
-                        </IconButton>
-                    </Stack>
+                            다음
+                        </button>
+                    </div>
 
+                    {/* 현재 월의 주차 데이터 표시 */}
                     {Object.keys(currentMonthData).length === 0 ? (
-                        <Typography>{monthList[currentMonthIndex]} 데이터가 없습니다.</Typography>
+                        <p>{monthList[currentMonthIndex]} 데이터가 없습니다.</p>
                     ) : (
                         Object.entries(currentMonthData)
                             .sort(([a], [b]) => {
+                                // 주차 번호 추출하여 내림차순 정렬
                                 const weekNumA = parseInt(a.replace('주차', ''));
                                 const weekNumB = parseInt(b.replace('주차', ''));
                                 return weekNumB - weekNumA;
@@ -392,17 +426,17 @@ const JugotList = () => {
                                 const monthKey = monthList[currentMonthIndex];
                                 const fullWeekKey = `${monthKey}-${weekKey}`;
                                 return (
-                                    <StockTable
+                                    <StockTable 
                                         key={fullWeekKey}
-                                        title={`${fullWeekKey} 주곳`}
-                                        data={weekData}
+                                        title={`${fullWeekKey} 주곳`} 
+                                        data={weekData} 
                                     />
                                 );
                             })
                     )}
                 </>
             )}
-        </Box>
+        </div>
     );
 };
 
