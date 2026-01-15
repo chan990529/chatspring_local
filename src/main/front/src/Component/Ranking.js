@@ -199,6 +199,14 @@ const Ranking = () => {
         return dateString.replace(/-/g, '.');
     };
 
+    // 1, 2, 3등은 이모지로 표시
+    const getRankDisplay = (rank) => {
+        if (rank === 1) return '🥇';
+        if (rank === 2) return '🥈';
+        if (rank === 3) return '🥉';
+        return rank;
+    };
+
     // 랭킹 테이블 컴포넌트
     const RankingTable = ({ title, data, isGainers = true }) => (
         <div className="stock-table-container">
@@ -222,7 +230,7 @@ const Ranking = () => {
                             <tr key={`${stock.name}-${stock.weekKey}-${index}`}>
                                 <td>
                                     <span className={`rank-badge ${isGainers ? 'gainers' : 'losers'}`}>
-                                        {index + 1}
+                                        {getRankDisplay(index + 1)}
                                     </span>
                                 </td>
                                 <td>{stock.name}</td>
@@ -263,7 +271,7 @@ const Ranking = () => {
                             <tr key={`${trade.id}-${index}`}>
                                 <td>
                                     <span className="rank-badge gainers">
-                                        {index + 1}
+                                        {getRankDisplay(index + 1)}
                                     </span>
                                 </td>
                                 <td>{trade.stockName || '-'}</td>
