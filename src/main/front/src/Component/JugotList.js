@@ -396,7 +396,7 @@ const JugotList = () => {
                             onClick={handlePreviousMonth}
                             disabled={currentMonthIndex === 0}
                         >
-                            이전
+                            ←
                         </button>
                         
                         {/* 월별 페이지 번호 */}
@@ -417,7 +417,7 @@ const JugotList = () => {
                             onClick={handleNextMonth}
                             disabled={currentMonthIndex === monthList.length - 1}
                         >
-                            다음
+                            →
                         </button>
                     </div>
 
