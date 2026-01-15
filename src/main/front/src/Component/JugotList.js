@@ -179,6 +179,16 @@ const JugotList = () => {
         return { monthGroups: grouped, monthList: months };
     }, [allWeeksData]);
 
+    const formatMonthLabel = (monthKey) => {
+        const match = monthKey.match(/(\d+)년\s*(\d+)월/);
+        if (!match) {
+            return monthKey;
+        }
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10);
+        return `${year % 100}.${month}`;
+    };
+
     // 현재 월의 데이터 가져오기
     const currentMonthData = useMemo(() => {
         if (monthList.length === 0 || currentMonthIndex >= monthList.length) {
@@ -397,7 +407,7 @@ const JugotList = () => {
                                     className={`pagination-month-button ${currentMonthIndex === index ? 'active' : ''}`}
                                     onClick={() => handleMonthSelect(index)}
                                 >
-                                    {month}
+                                    {formatMonthLabel(month)}
                                 </button>
                             ))}
                         </div>
