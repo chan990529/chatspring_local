@@ -1,6 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import config from '../config';
+import {
+    Alert,
+    Box,
+    CircularProgress,
+    Paper,
+    Tab,
+    Tabs,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from '@mui/material';
 
 const Ranking = () => {
     const [topGainers, setTopGainers] = useState([]);
@@ -201,162 +216,164 @@ const Ranking = () => {
 
     // 랭킹 테이블 컴포넌트
     const RankingTable = ({ title, data, isGainers = true }) => (
-        <div className="stock-table-container">
-            <h3>{title}</h3>
+        <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" sx={{ mb: 1.5 }}>
+                {title}
+            </Typography>
             {data.length === 0 ? (
-                <p className="empty-message">데이터가 없습니다.</p>
+                <Typography color="text.secondary">데이터가 없습니다.</Typography>
             ) : (
-                <table className="stock-table">
-                    <thead>
-                        <tr>
-                            <th>순위</th>
-                            <th>종목명</th>
-                            <th className="text-right">포착가</th>
-                            <th className="text-right">포착일</th>
-                            <th className="text-right">현재가</th>
-                            <th className="text-right">{isGainers ? '상승률' : '하락률'}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((stock, index) => (
-                            <tr key={`${stock.name}-${stock.weekKey}-${index}`}>
-                                <td>
-                                    <span className={`rank-badge ${isGainers ? 'gainers' : 'losers'}`}>
-                                        {index + 1}
-                                    </span>
-                                </td>
-                                <td>{stock.name}</td>
-                                <td className="text-right">{formatPrice(stock.capturePrice)}원</td>
-                                <td className="text-right">{formatDate(stock.captureDate)}</td>
-                                <td className="text-right">{formatPrice(stock.currentPrice)}원</td>
-                                <td className={`text-right change-rate ${stock.changeRate >= 0 ? 'positive' : 'negative'}`}>
-                                    {formatChangeRate(stock.changeRate)}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <TableContainer component={Paper} variant="outlined">
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>순위</TableCell>
+                                <TableCell>종목명</TableCell>
+                                <TableCell align="right">포착가</TableCell>
+                                <TableCell align="right">포착일</TableCell>
+                                <TableCell align="right">현재가</TableCell>
+                                <TableCell align="right">{isGainers ? '상승률' : '하락률'}</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data.map((stock, index) => (
+                                <TableRow key={`${stock.name}-${stock.weekKey}-${index}`} hover>
+                                    <TableCell>
+                                        <Box
+                                            component="span"
+                                            sx={{
+                                                px: 1,
+                                                py: 0.25,
+                                                borderRadius: 1,
+                                                fontWeight: 700,
+                                                bgcolor: isGainers ? 'rgba(76, 175, 80, 0.2)' : 'rgba(244, 67, 54, 0.2)',
+                                                color: isGainers ? '#4caf50' : '#f44336'
+                                            }}
+                                        >
+                                            {index + 1}
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell>{stock.name}</TableCell>
+                                    <TableCell align="right">{formatPrice(stock.capturePrice)}원</TableCell>
+                                    <TableCell align="right">{formatDate(stock.captureDate)}</TableCell>
+                                    <TableCell align="right">{formatPrice(stock.currentPrice)}원</TableCell>
+                                    <TableCell
+                                        align="right"
+                                        sx={{ color: stock.changeRate >= 0 ? '#ff6b6b' : '#4ecdc4', fontWeight: 700 }}
+                                    >
+                                        {formatChangeRate(stock.changeRate)}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             )}
-        </div>
+        </Box>
     );
 
     // 실매매 TOP15 테이블 컴포넌트
     const RealTradeTable = ({ title, data }) => (
-        <div className="stock-table-container">
-            <h3>{title}</h3>
+        <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" sx={{ mb: 1.5 }}>
+                {title}
+            </Typography>
             {data.length === 0 ? (
-                <p className="empty-message">진행 중인 실매매가 없습니다.</p>
+                <Typography color="text.secondary">진행 중인 실매매가 없습니다.</Typography>
             ) : (
-                <table className="stock-table">
-                    <thead>
-                        <tr>
-                            <th>순위</th>
-                            <th>종목명</th>
-                            <th>종목코드</th>
-                            <th className="text-right">평단가</th>
-                            <th className="text-right">현재가</th>
-                            <th className="text-right">수익률</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((trade, index) => (
-                            <tr key={`${trade.id}-${index}`}>
-                                <td>
-                                    <span className="rank-badge gainers">
-                                        {index + 1}
-                                    </span>
-                                </td>
-                                <td>{trade.stockName || '-'}</td>
-                                <td>{trade.stockCode || '-'}</td>
-                                <td className="text-right">{formatPrice(trade.basePrice)}원</td>
-                                <td className="text-right">{formatPrice(trade.currentPrice)}원</td>
-                                <td className={`text-right change-rate ${trade.profitRate >= 0 ? 'positive' : 'negative'}`}>
-                                    {formatChangeRate(trade.profitRate)}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <TableContainer component={Paper} variant="outlined">
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>순위</TableCell>
+                                <TableCell>종목명</TableCell>
+                                <TableCell>종목코드</TableCell>
+                                <TableCell align="right">평단가</TableCell>
+                                <TableCell align="right">현재가</TableCell>
+                                <TableCell align="right">수익률</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data.map((trade, index) => (
+                                <TableRow key={`${trade.id}-${index}`} hover>
+                                    <TableCell>
+                                        <Box
+                                            component="span"
+                                            sx={{
+                                                px: 1,
+                                                py: 0.25,
+                                                borderRadius: 1,
+                                                fontWeight: 700,
+                                                bgcolor: 'rgba(76, 175, 80, 0.2)',
+                                                color: '#4caf50'
+                                            }}
+                                        >
+                                            {index + 1}
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell>{trade.stockName || '-'}</TableCell>
+                                    <TableCell>{trade.stockCode || '-'}</TableCell>
+                                    <TableCell align="right">{formatPrice(trade.basePrice)}원</TableCell>
+                                    <TableCell align="right">{formatPrice(trade.currentPrice)}원</TableCell>
+                                    <TableCell
+                                        align="right"
+                                        sx={{ color: trade.profitRate >= 0 ? '#ff6b6b' : '#4ecdc4', fontWeight: 700 }}
+                                    >
+                                        {formatChangeRate(trade.profitRate)}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             )}
-        </div>
+        </Box>
     );
 
     if (loading) {
         return (
-                <div className="loading-container">
-                    <h2>등락랭킹</h2>
-                    <p>데이터를 불러오는 중...</p>
-                </div>
+            <Box sx={{ px: 2, py: 3 }}>
+                <Typography variant="h5" sx={{ mb: 2 }}>
+                    등락랭킹
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <CircularProgress size={20} />
+                    <Typography>데이터를 불러오는 중...</Typography>
+                </Box>
+            </Box>
         );
     }
 
     return (
-            <div className="ranking-container">
-                {/*<h2 className="ranking-title">*/}
-                {/*    등락랭킹*/}
-                {/*</h2>*/}
-                
-                {isUpdating && (
-                    <div style={{
-                        padding: '12px',
-                        marginBottom: '20px',
-                        backgroundColor: '#ff9800',
-                        color: '#fff',
-                        borderRadius: '4px',
-                        textAlign: 'center',
-                        fontWeight: 'bold'
-                    }}>
-                        주가 업데이트 중입니다. 잠시만 기다려주세요...
-                    </div>
-                )}
-                
-                {/* 탭 네비게이션 */}
-                <div className="ranking-tabs">
-                    <button
-                        className={activeTab === 'gainers' ? 'active' : ''}
-                        onClick={() => setActiveTab('gainers')}
-                    >
-                        📈 상승률 TOP 15
-                    </button>
-                    <button
-                        className={activeTab === 'losers' ? 'active' : ''}
-                        onClick={() => setActiveTab('losers')}
-                    >
-                        📉 하락률 TOP 15
-                    </button>
-                    <button
-                        className={activeTab === 'realtrade' ? 'active' : ''}
-                        onClick={() => setActiveTab('realtrade')}
-                    >
-                        💰 실매매 TOP 15
-                    </button>
-                </div>
-                
-                {/* 선택된 탭에 따라 테이블 표시 */}
-                <div className="ranking-tab-content">
-                    {activeTab === 'gainers' && (
-                        <RankingTable 
-                            title="📈 상승률 TOP 15" 
-                            data={topGainers} 
-                            isGainers={true}
-                        />
-                    )}
-                    {activeTab === 'losers' && (
-                        <RankingTable 
-                            title="📉 하락률 TOP 15" 
-                            data={topLosers} 
-                            isGainers={false}
-                        />
-                    )}
-                    {activeTab === 'realtrade' && (
-                        <RealTradeTable 
-                            title="💰 실매매 TOP 15" 
-                            data={realTradeTop15}
-                        />
-                    )}
-                </div>
+        <Box sx={{ px: 2, py: 3 }}>
+            {isUpdating && (
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                    주가 업데이트 중입니다. 잠시만 기다려주세요...
+                </Alert>
+            )}
 
-            </div>
+            <Tabs
+                value={activeTab}
+                onChange={(event, newValue) => setActiveTab(newValue)}
+                variant="scrollable"
+                scrollButtons="auto"
+                sx={{ mb: 2 }}
+            >
+                <Tab value="gainers" label="📈 상승률 TOP 15" />
+                <Tab value="losers" label="📉 하락률 TOP 15" />
+                <Tab value="realtrade" label="💰 실매매 TOP 15" />
+            </Tabs>
+
+            {activeTab === 'gainers' && (
+                <RankingTable title="📈 상승률 TOP 15" data={topGainers} isGainers={true} />
+            )}
+            {activeTab === 'losers' && (
+                <RankingTable title="📉 하락률 TOP 15" data={topLosers} isGainers={false} />
+            )}
+            {activeTab === 'realtrade' && (
+                <RealTradeTable title="💰 실매매 TOP 15" data={realTradeTop15} />
+            )}
+        </Box>
     );
 };
 

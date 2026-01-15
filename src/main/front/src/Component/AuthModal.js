@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './AuthModal.css';
 import config from '../config';
+import {
+    Alert,
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Tab,
+    Tabs,
+    TextField,
+    Typography
+} from '@mui/material';
 
 const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const [isLogin, setIsLogin] = useState(true);
@@ -168,8 +180,8 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
         }
     };
 
-    const toggleMode = () => {
-        setIsLogin(!isLogin);
+    const toggleMode = (mode) => {
+        setIsLogin(mode);
         setFormData({ username: '', password: '', passwordConfirm: '', nickname: '' });
         setError('');
         setValidationErrors({ username: '', password: '', passwordConfirm: '', nickname: '' });
@@ -178,110 +190,109 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="auth-modal-overlay" onClick={onClose}>
-            <div className="auth-modal-content" onClick={(e) => e.stopPropagation()}>
-                <button className="auth-modal-close" onClick={onClose}>×</button>
-                <h2>{isLogin ? '로그인' : '회원가입'}</h2>
-                
-                <form onSubmit={handleSubmit}>
-                    {!isLogin && (
-                        <div className="auth-form-group">
-                            <label>닉네임</label>
-                            <input
-                                type="text"
-                                name="nickname"
-                                value={formData.nickname}
-                                onChange={handleChange}
-                                required
-                                placeholder="닉네임을 입력하세요"
-                            />
-                            <div className="auth-form-hint">한글/영문만 사용 가능, 최대 10자, 특수문자 불가</div>
-                            {validationErrors.nickname && (
-                                <div className="auth-validation-error">{validationErrors.nickname}</div>
-                            )}
-                        </div>
-                    )}
-                    <div className="auth-form-group">
-                        <label>아이디</label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            required
-                            placeholder="아이디를 입력하세요"
-                        />
-                        {!isLogin && (
-                            <>
-                                <div className="auth-form-hint">영문 소문자/숫자만 사용 가능, 6~20자, 특수문자 불가</div>
-                                {validationErrors.username && (
-                                    <div className="auth-validation-error">{validationErrors.username}</div>
-                                )}
-                            </>
-                        )}
-                    </div>
-                    <div className="auth-form-group">
-                        <label>비밀번호</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            placeholder="비밀번호를 입력하세요"
-                        />
-                        {!isLogin && (
-                            <>
-                                <div className="auth-form-hint">영문/숫자/특수문자(@$!%*#?&) 포함, 8~20자</div>
-                                {validationErrors.password && (
-                                    <div className="auth-validation-error">{validationErrors.password}</div>
-                                )}
-                            </>
-                        )}
-                    </div>
-                    {!isLogin && (
-                        <div className="auth-form-group">
-                            <label>비밀번호 확인</label>
-                            <input
-                                type="password"
-                                name="passwordConfirm"
-                                value={formData.passwordConfirm}
-                                onChange={handleChange}
-                                required
-                                placeholder="비밀번호를 다시 입력하세요"
-                            />
-                            {validationErrors.passwordConfirm && (
-                                <div className="auth-validation-error">{validationErrors.passwordConfirm}</div>
-                            )}
-                        </div>
-                    )}
-                    
-                    {error && <div className="auth-error">{error}</div>}
-                    
-                    <button type="submit" className="auth-submit-btn" disabled={loading}>
-                        {loading ? '처리 중...' : (isLogin ? '로그인' : '회원가입')}
-                    </button>
-                </form>
+        <Dialog open={isOpen} onClose={onClose} maxWidth="xs" fullWidth>
+            <DialogTitle>
+                {isLogin ? '로그인' : '회원가입'}
+            </DialogTitle>
+            <DialogContent>
+                <Tabs
+                    value={isLogin ? 0 : 1}
+                    onChange={(event, value) => toggleMode(value === 0)}
+                    variant="fullWidth"
+                    sx={{ mb: 2 }}
+                >
+                    <Tab label="로그인" />
+                    <Tab label="회원가입" />
+                </Tabs>
 
-                <div className="auth-toggle">
-                    {isLogin ? (
-                        <>
-                            계정이 없으신가요?{' '}
-                            <button type="button" onClick={toggleMode} className="auth-toggle-btn">
-                                회원가입
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            이미 계정이 있으신가요?{' '}
-                            <button type="button" onClick={toggleMode} className="auth-toggle-btn">
-                                로그인
-                            </button>
-                        </>
+                <Box
+                    id="auth-form"
+                    component="form"
+                    onSubmit={handleSubmit}
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                >
+                    {!isLogin && (
+                        <TextField
+                            label="닉네임"
+                            name="nickname"
+                            value={formData.nickname}
+                            onChange={handleChange}
+                            required
+                            placeholder="닉네임을 입력하세요"
+                            error={Boolean(validationErrors.nickname)}
+                            helperText={validationErrors.nickname || '한글/영문만 사용 가능, 최대 10자, 특수문자 불가'}
+                        />
                     )}
-                </div>
-            </div>
-        </div>
+                    <TextField
+                        label="아이디"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                        placeholder="아이디를 입력하세요"
+                        error={!isLogin && Boolean(validationErrors.username)}
+                        helperText={
+                            !isLogin
+                                ? (validationErrors.username || '영문 소문자/숫자만 사용 가능, 6~20자, 특수문자 불가')
+                                : ''
+                        }
+                    />
+                    <TextField
+                        label="비밀번호"
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        placeholder="비밀번호를 입력하세요"
+                        error={!isLogin && Boolean(validationErrors.password)}
+                        helperText={
+                            !isLogin
+                                ? (validationErrors.password || '영문/숫자/특수문자(@$!%*#?&) 포함, 8~20자')
+                                : ''
+                        }
+                    />
+                    {!isLogin && (
+                        <TextField
+                            label="비밀번호 확인"
+                            type="password"
+                            name="passwordConfirm"
+                            value={formData.passwordConfirm}
+                            onChange={handleChange}
+                            required
+                            placeholder="비밀번호를 다시 입력하세요"
+                            error={Boolean(validationErrors.passwordConfirm)}
+                            helperText={validationErrors.passwordConfirm || ' '}
+                        />
+                    )}
+
+                    {error && <Alert severity="error">{error}</Alert>}
+                </Box>
+            </DialogContent>
+            <DialogActions sx={{ px: 3, pb: 2 }}>
+                <Button onClick={onClose}>닫기</Button>
+                <Button type="submit" form="auth-form" variant="contained" disabled={loading}>
+                    {loading ? '처리 중...' : (isLogin ? '로그인' : '회원가입')}
+                </Button>
+            </DialogActions>
+            <Box sx={{ px: 3, pb: 3, textAlign: 'center' }}>
+                {isLogin ? (
+                    <Typography variant="body2" color="text.secondary">
+                        계정이 없으신가요?{' '}
+                        <Button size="small" onClick={() => toggleMode(false)}>
+                            회원가입
+                        </Button>
+                    </Typography>
+                ) : (
+                    <Typography variant="body2" color="text.secondary">
+                        이미 계정이 있으신가요?{' '}
+                        <Button size="small" onClick={() => toggleMode(true)}>
+                            로그인
+                        </Button>
+                    </Typography>
+                )}
+            </Box>
+        </Dialog>
     );
 };
 
