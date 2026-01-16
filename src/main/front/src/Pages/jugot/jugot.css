@@ -84,7 +84,7 @@
 
 /* 4. 글래스모피즘 스타일: 테이블 컨테이너 */
 .jugot-scope .stock-table-container {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 15px;
