@@ -342,7 +342,6 @@ const RealTrade = () => {
     if (loading) {
         return (
             <div className="content">
-                <h2>Real Trade</h2>
                 <p>로딩 중...</p>
             </div>
         );
@@ -351,7 +350,6 @@ const RealTrade = () => {
     if (error) {
         return (
             <div className="content">
-                <h2>실매매</h2>
                 <p style={{ color: '#ff6b6b' }}>{error}</p>
             </div>
         );

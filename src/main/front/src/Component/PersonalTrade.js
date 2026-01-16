@@ -171,7 +171,6 @@ const PersonalTrade = () => {
     if (loadingParticipants) {
         return (
             <div className="content">
-                <h2>Personal Trade</h2>
                 <p>로딩 중...</p>
             </div>
         );
@@ -180,7 +179,6 @@ const PersonalTrade = () => {
     if (error && participants.length === 0) {
         return (
             <div className="content">
-                <h2>Personal Trade</h2>
                 <p style={{ color: '#ff6b6b' }}>{error}</p>
             </div>
         );
