@@ -1,0 +1,91 @@
+/* --- src/Pages/HomePage.css --- */
+.home-page {
+    min-height: 100svh;
+    padding: 60px 30px;
+    text-align: center;
+    color: #f0f0f0;
+    background: linear-gradient(125deg, #0f0c29, #302b63, #24243e, #141e30, #243b55);
+    background-size: 200% 200%;
+    animation: home-gradient 20s ease infinite;
+}
+
+@keyframes home-gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.home-page h2 {
+    font-size: 2.8em;
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.home-page p {
+    font-size: 1.2em;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 40px;
+}
+
+.dashboard-link {
+    display: inline-block;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+    margin: 0 10px;
+}
+
+.dashboard-link:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .home-page {
+        padding: 40px 20px;
+    }
+
+    .home-page h2 {
+        font-size: 2em;
+    }
+
+    .home-page p {
+        font-size: 1em;
+        margin-bottom: 30px;
+    }
+
+    .dashboard-link {
+        padding: 10px 22px;
+        font-size: 0.95em;
+        margin: 6px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-page {
+        padding: 30px 16px;
+    }
+
+    .home-page h2 {
+        font-size: 1.6em;
+    }
+
+    .home-page p {
+        font-size: 0.95em;
+        margin-bottom: 24px;
+    }
+
+    .dashboard-link {
+        padding: 8px 18px;
+        font-size: 0.9em;
+        margin: 6px 6px;
+    }
+}
