@@ -185,7 +185,7 @@ const StockTable = ({ title, data }) => {
     return (
         <div className="stock-table-container">
             <h3>{title}</h3>
-            <table className="stock-table">
+            <table className="stock-table sticky-first-column">
                 <thead>
                 <tr>
                     {headers.map(({ label, key }) => (
