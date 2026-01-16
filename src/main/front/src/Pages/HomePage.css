@@ -1,12 +1,28 @@
 /* --- src/Pages/HomePage.css --- */
 .home-page {
-    min-height: 100svh;
-    padding: 60px 30px;
+    /* 1. 높이 설정: 화면에 딱 맞춤 */
+    height: 100svh; /* min-height 대신 height 사용 */
+
+    /* 2. 핵심 수정: 패딩을 높이 계산에 포함시킴 (이제 안 넘칩니다!) */
+    box-sizing: border-box;
+
+    /* 3. 내용 정렬: 화면 정중앙에 배치 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 세로 중앙 정렬 */
+    align-items: center;     /* 가로 중앙 정렬 */
+
+    padding: 20px; /* 패딩을 약간 줄여도 됩니다 */
     text-align: center;
     color: #f0f0f0;
+
+    /* 배경 설정 유지 */
     background: linear-gradient(125deg, #0f0c29, #302b63, #24243e, #141e30, #243b55);
     background-size: 200% 200%;
     animation: home-gradient 20s ease infinite;
+
+    /* 혹시 모를 스크롤 방지 */
+    overflow: hidden;
 }
 
 @keyframes home-gradient {
@@ -18,7 +34,7 @@
 .home-page h2 {
     font-size: 2.8em;
     color: #fff;
-    margin: 0;
+    margin: 0 0 20px 0; /* 하단 여백만 줌 */
     text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -39,7 +55,7 @@
     border-radius: 50px;
     text-decoration: none;
     transition: background-color 0.3s, transform 0.2s;
-    margin: 0 10px;
+    margin: 10px; /* 버튼 간격 조정 */
 }
 
 .dashboard-link:hover {
@@ -47,45 +63,9 @@
     transform: translateY(-2px);
 }
 
-/* 반응형 */
+/* 반응형: 화면이 작아질 때 글씨 크기 조정 */
 @media (max-width: 768px) {
-    .home-page {
-        padding: 40px 20px;
-    }
-
-    .home-page h2 {
-        font-size: 2em;
-    }
-
-    .home-page p {
-        font-size: 1em;
-        margin-bottom: 30px;
-    }
-
-    .dashboard-link {
-        padding: 10px 22px;
-        font-size: 0.95em;
-        margin: 6px 8px;
-    }
-}
-
-@media (max-width: 480px) {
-    .home-page {
-        padding: 30px 16px;
-    }
-
-    .home-page h2 {
-        font-size: 1.6em;
-    }
-
-    .home-page p {
-        font-size: 0.95em;
-        margin-bottom: 24px;
-    }
-
-    .dashboard-link {
-        padding: 8px 18px;
-        font-size: 0.9em;
-        margin: 6px 6px;
-    }
+    .home-page h2 { font-size: 2em; }
+    .home-page p { font-size: 1em; }
+    .dashboard-link { padding: 10px 22px; font-size: 0.95em; }
 }
