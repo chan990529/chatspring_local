@@ -198,6 +198,41 @@ const JugotList = () => {
         return monthGroups[currentMonthKey] || {};
     }, [monthGroups, monthList, currentMonthIndex]);
 
+    // 보여줄 월 목록 계산 (최대 4개만 표시, 슬라이딩 윈도우 방식)
+    const getVisibleMonths = useMemo(() => {
+        const maxVisible = 4;
+        const totalMonths = monthList.length;
+        
+        if (totalMonths <= maxVisible) {
+            // 전체가 4개 이하면 모두 표시
+            return monthList.map((month, index) => ({ month, index }));
+        }
+        
+        // 슬라이딩 윈도우 계산
+        let startIndex = 0;
+        let endIndex = maxVisible;
+        
+        // 현재 인덱스가 뒤쪽에 있으면 현재를 포함한 뒤쪽 4개
+        if (currentMonthIndex >= totalMonths - maxVisible) {
+            // 끝에서 4개
+            startIndex = totalMonths - maxVisible;
+            endIndex = totalMonths;
+        } else if (currentMonthIndex < maxVisible) {
+            // 앞쪽에 있으면 앞에서 4개
+            startIndex = 0;
+            endIndex = maxVisible;
+        } else {
+            // 중간에 있으면 현재를 포함한 앞쪽 4개 (현재가 마지막에서 2번째)
+            startIndex = currentMonthIndex - (maxVisible - 1);
+            endIndex = currentMonthIndex + 1;
+        }
+        
+        return monthList.slice(startIndex, endIndex).map((month, relativeIndex) => ({
+            month,
+            index: startIndex + relativeIndex
+        }));
+    }, [monthList, currentMonthIndex]);
+
     // 업데이트 상태 확인
     useEffect(() => {
         const checkUpdateStatus = async () => {
@@ -367,41 +402,6 @@ const JugotList = () => {
             setCurrentMonthIndex(index);
         }
     };
-
-    // 보여줄 월 목록 계산 (최대 4개만 표시, 슬라이딩 윈도우 방식)
-    const getVisibleMonths = useMemo(() => {
-        const maxVisible = 4;
-        const totalMonths = monthList.length;
-        
-        if (totalMonths <= maxVisible) {
-            // 전체가 4개 이하면 모두 표시
-            return monthList.map((month, index) => ({ month, index }));
-        }
-        
-        // 슬라이딩 윈도우 계산
-        let startIndex = 0;
-        let endIndex = maxVisible;
-        
-        // 현재 인덱스가 뒤쪽에 있으면 현재를 포함한 뒤쪽 4개
-        if (currentMonthIndex >= totalMonths - maxVisible) {
-            // 끝에서 4개
-            startIndex = totalMonths - maxVisible;
-            endIndex = totalMonths;
-        } else if (currentMonthIndex < maxVisible) {
-            // 앞쪽에 있으면 앞에서 4개
-            startIndex = 0;
-            endIndex = maxVisible;
-        } else {
-            // 중간에 있으면 현재를 포함한 앞쪽 4개 (현재가 마지막에서 2번째)
-            startIndex = currentMonthIndex - (maxVisible - 1);
-            endIndex = currentMonthIndex + 1;
-        }
-        
-        return monthList.slice(startIndex, endIndex).map((month, relativeIndex) => ({
-            month,
-            index: startIndex + relativeIndex
-        }));
-    }, [monthList, currentMonthIndex]);
 
     return (
         <div>
