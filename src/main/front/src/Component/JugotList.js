@@ -371,18 +371,10 @@ const JugotList = () => {
 
     return (
         <div>
-            <h2>주곳리스트 (최근 6개월)</h2>
             {isUpdating && (
-                <div style={{
-                    padding: '12px',
-                    marginBottom: '20px',
-                    backgroundColor: '#ff9800',
-                    color: '#fff',
-                    borderRadius: '4px',
-                    textAlign: 'center',
-                    fontWeight: 'bold'
-                }}>
-                    주가 업데이트 중입니다. 잠시만 기다려주세요...
+                <div className="update-notification">
+                    <div className="mini-spinner"></div>
+                    <span>주가 업데이트 중입니다. 잠시만 기다려주세요...</span>
                 </div>
             )}
             {monthList.length === 0 ? (

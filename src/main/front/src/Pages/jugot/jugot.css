@@ -232,6 +232,58 @@
     transform: translateY(-2px);
 }
 
+/* 업데이트 알림 배너 (글래스모피즘 스타일) */
+.jugot-scope .update-notification,
+.update-notification {
+    background: rgba(255, 152, 0, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 152, 0, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(255, 140, 0, 0.15);
+    color: #ffe0b2;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    animation: gentle-pulse 2.5s infinite ease-in-out;
+}
+
+@keyframes gentle-pulse {
+    0% {
+        background: rgba(255, 152, 0, 0.1);
+        border-color: rgba(255, 152, 0, 0.3);
+    }
+    50% {
+        background: rgba(255, 152, 0, 0.2);
+        border-color: rgba(255, 152, 0, 0.6);
+        box-shadow: 0 4px 25px rgba(255, 140, 0, 0.25);
+    }
+    100% {
+        background: rgba(255, 152, 0, 0.1);
+        border-color: rgba(255, 152, 0, 0.3);
+    }
+}
+
+.jugot-scope .mini-spinner,
+.mini-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 224, 178, 0.2);
+    border-top: 2px solid #ffe0b2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* 8. 주식 가격 상승/하락 색상 스타일 */
 .jugot-scope .price-up {
     color: #ff6b6b; /* 빨간색 - 상승 */
