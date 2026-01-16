@@ -9,16 +9,17 @@ const HomePage = () => {
                 <h2>치맨과 함께</h2>
                 <p></p>
 
-                {/* 주곳(Dashboard)으로 이동 */}
-                <Link to="/dashboard" className="dashboard-link">
-                    주곳으로 이동
-                </Link>
+                <div className="home-actions">
+                    {/* 주곳(Dashboard)으로 이동 */}
+                    <Link to="/dashboard" className="dashboard-link">
+                        주곳으로 이동
+                    </Link>
 
-                {/* 스캘핑 연구소로 이동 */}
-                <Link
-                    to="/Scalping" className="dashboard-link">
-                    스캘핑 연구소로 이동
-                </Link>
+                    {/* 스캘핑 연구소로 이동 */}
+                    <Link to="/Scalping" className="dashboard-link">
+                        스캘핑 연구소로 이동
+                    </Link>
+                </div>
             </div>
     );
 };

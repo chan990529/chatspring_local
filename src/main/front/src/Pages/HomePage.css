@@ -1,7 +1,8 @@
 /* --- src/Pages/HomePage.css --- */
 .home-page {
-    /* 1. 높이 설정: 화면에 딱 맞춤 */
-    height: 100svh; /* min-height 대신 height 사용 */
+    /* 1. 높이 설정: 화면 높이의 1/3까지만 */
+    height: 33.333svh;
+    max-height: 33.333svh;
 
     /* 2. 핵심 수정: 패딩을 높이 계산에 포함시킴 (이제 안 넘칩니다!) */
     box-sizing: border-box;
@@ -12,7 +13,7 @@
     justify-content: center; /* 세로 중앙 정렬 */
     align-items: center;     /* 가로 중앙 정렬 */
 
-    padding: 20px; /* 패딩을 약간 줄여도 됩니다 */
+    padding: 20px; /* 패딩 포함하여도 1/3을 넘지 않게 */
     text-align: center;
     color: #f0f0f0;
 
@@ -44,6 +45,14 @@
     margin-bottom: 40px;
 }
 
+.home-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
 .dashboard-link {
     display: inline-block;
     padding: 12px 30px;
@@ -55,7 +64,7 @@
     border-radius: 50px;
     text-decoration: none;
     transition: background-color 0.3s, transform 0.2s;
-    margin: 10px; /* 버튼 간격 조정 */
+    margin: 0;
 }
 
 .dashboard-link:hover {
