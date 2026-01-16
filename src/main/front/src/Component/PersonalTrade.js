@@ -359,13 +359,21 @@ const PersonalTrade = () => {
                                                             borderRadius: '4px',
                                                             backgroundColor: trade.status === 'ACTIVE'
                                                                 ? 'rgba(76, 175, 80, 0.3)'
+                                                                : trade.status === 'PAUSED'
+                                                                ? 'rgba(255, 193, 7, 0.3)'
                                                                 : trade.status === 'COMPLETED'
                                                                 ? 'rgba(158, 158, 158, 0.3)'
                                                                 : 'rgba(158, 158, 158, 0.3)',
                                                             color: '#fff',
                                                             fontSize: '12px'
                                                         }}>
-                                                            {trade.status === 'ACTIVE' ? '진행중' : trade.status === 'COMPLETED' ? '완료' : trade.status}
+                                                            {trade.status === 'ACTIVE'
+                                                                ? '진행중'
+                                                                : trade.status === 'PAUSED'
+                                                                ? '중단'
+                                                                : trade.status === 'COMPLETED'
+                                                                ? '완료'
+                                                                : trade.status}
                                                         </span>
                                                     </td>
                                                 </tr>
