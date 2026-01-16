@@ -14,6 +14,51 @@ import config from '../../config';
 
 import './jugot.css';
 
+// 아이콘 컴포넌트 (깔끔한 디자인을 위해 추가)
+const Icons = {
+    Admin: () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 14a4 4 0 1 1 4-4 4 4 0 0 1-4 4z"></path>
+        </svg>
+    ),
+    Lab: () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10 2v7.31"></path>
+            <path d="M14 2v7.31"></path>
+            <path d="M8.5 2h7"></path>
+            <path d="M7 16h10"></path>
+            <path d="M12 22v-6"></path>
+            <path d="M19.48 22H4.52a2 2 0 0 1-1.92-2.5l2-9.68a2 2 0 0 1 1.96-1.59h10.88a2 2 0 0 1 1.96 1.59l2 9.68a2 2 0 0 1-1.92 2.5z"></path>
+        </svg>
+    ),
+    User: () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+    ),
+    Settings: () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+    ),
+    Logout: () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+    ),
+    Login: () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+            <polyline points="10 17 15 12 10 7"></polyline>
+            <line x1="15" y1="12" x2="3" y2="12"></line>
+        </svg>
+    )
+};
+
 const DashboardPage = () => {
     const [activeTab, setActiveTab] = useState('주곳리스트');
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -152,40 +197,45 @@ const DashboardPage = () => {
     return (
         <div>
             <div className="auth-header">
-                <div className="auth-header-content">
+                <div className="header-actions-left">
+                    {userRole === 'pingddak' && (
+                        <Link to="/admin" className="glass-btn btn-danger">
+                            <Icons.Admin />
+                            <span>관리자</span>
+                        </Link>
+                    )}
+                    <button onClick={() => navigate('/Scalping')} className="glass-btn btn-primary">
+                        <Icons.Lab />
+                        <span>연구소</span>
+                    </button>
+                </div>
+                <div className="header-actions-right">
                     {isLoggedIn ? (
-                        <div className="user-info">
-                            {userRole === 'pingddak' && (
-                                <Link 
-                                    to="/admin" 
-                                    className="admin-link-btn"
+                        <>
+                            <div className="user-profile-pill">
+                                <span className="nickname-text">
+                                    <Icons.User />
+                                    {userInfo?.nickname || '사용자'}님
+                                </span>
+                                <div className="divider"></div>
+                                <button
+                                    onClick={() => setIsUserInfoEditOpen(true)}
+                                    className="icon-only-btn"
+                                    title="정보 수정"
                                 >
-                                    관리자 페이지로
-                                </Link>
-                            )}
-                            <button 
-                                onClick={() => setIsUserInfoEditOpen(true)} 
-                                className="info-edit-btn"
-                                title="정보 수정"
-                            >
-                                <span>⚙️</span>
-                                <span>정보 수정</span>
+                                    <Icons.Settings />
+                                </button>
+                            </div>
+                            <button onClick={handleLogout} className="glass-btn btn-outline">
+                                <Icons.Logout />
+                                <span>로그아웃</span>
                             </button>
-                            <span className="user-nickname">{userInfo?.nickname || '사용자'}님</span>
-                            <button onClick={() => navigate('/Scalping')} className="research-btn">
-                                연구소로
-                            </button>
-                            <button onClick={handleLogout} className="logout-btn">로그아웃</button>
-                        </div>
+                        </>
                     ) : (
-                        <div className="auth-buttons">
-                            <button onClick={() => setIsAuthModalOpen(true)} className="login-btn">
-                                로그인 / 회원가입
-                            </button>
-                            <button onClick={() => navigate('/Scalping')} className="research-btn">
-                                연구소로
-                            </button>
-                        </div>
+                        <button onClick={() => setIsAuthModalOpen(true)} className="glass-btn btn-accent">
+                            <Icons.Login />
+                            <span>로그인</span>
+                        </button>
                     )}
                 </div>
             </div>

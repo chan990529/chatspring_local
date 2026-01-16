@@ -512,101 +512,158 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* 인증 헤더 스타일 */
+/* 10. 인증 헤더 및 버튼 스타일 (통일된 글래스모피즘) */
 .jugot-scope .auth-header {
     display: flex;
-    justify-content: flex-end;
-    padding: 15px 20px;
-    margin-bottom: 10px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10px;
+    margin-bottom: 20px;
 }
 
-.jugot-scope .auth-header-content {
+.jugot-scope .header-actions-left,
+.jugot-scope .header-actions-right {
     display: flex;
     align-items: center;
+    gap: 12px;
 }
 
-.jugot-scope .auth-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.jugot-scope .login-btn,
-.jugot-scope .logout-btn,
-.jugot-scope .research-btn {
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 25px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.jugot-scope .login-btn:hover,
-.jugot-scope .logout-btn:hover,
-.jugot-scope .research-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.jugot-scope .user-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.jugot-scope .user-nickname {
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    padding: 10px 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-}
-
-.jugot-scope .admin-link-btn {
-    margin-right: 10px;
-    padding: 8px 16px;
-    background-color: #ff6b6b;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    display: inline-block;
-}
-
-.jugot-scope .admin-link-btn:hover {
-    background-color: #ff5252;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.jugot-scope .info-edit-btn {
-    margin-right: 10px;
-    padding: 8px 16px;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
+.jugot-scope .glass-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    transition: all 0.3s ease;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 }
 
-.jugot-scope .info-edit-btn:hover {
-    background-color: rgba(255, 255, 255, 0.3);
+.jugot-scope .glass-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
+
+.jugot-scope .glass-btn svg {
+    opacity: 0.9;
+}
+
+.jugot-scope .glass-btn.btn-danger {
+    background: rgba(255, 107, 107, 0.15);
+    border-color: rgba(255, 107, 107, 0.4);
+    color: #ff6b6b;
+}
+
+.jugot-scope .glass-btn.btn-danger:hover {
+    background: rgba(255, 107, 107, 0.25);
+    color: #fff;
+}
+
+.jugot-scope .glass-btn.btn-primary,
+.jugot-scope .glass-btn.btn-accent {
+    background: rgba(68, 138, 255, 0.15);
+    border-color: rgba(68, 138, 255, 0.4);
+    color: #82b1ff;
+}
+
+.jugot-scope .glass-btn.btn-primary:hover,
+.jugot-scope .glass-btn.btn-accent:hover {
+    background: rgba(68, 138, 255, 0.3);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(68, 138, 255, 0.3);
+}
+
+.jugot-scope .glass-btn.btn-outline {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.jugot-scope .glass-btn.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.jugot-scope .user-profile-pill {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 4px 6px 4px 16px;
+    backdrop-filter: blur(5px);
+}
+
+.jugot-scope .nickname-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #e0e0e0;
+    margin-right: 8px;
+}
+
+.jugot-scope .divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 4px;
+}
+
+.jugot-scope .icon-only-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.jugot-scope .icon-only-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: rotate(30deg);
+}
+
+@media (max-width: 768px) {
+    .jugot-scope .auth-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .jugot-scope .header-actions-left,
+    .jugot-scope .header-actions-right {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .jugot-scope .glass-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .jugot-scope .user-profile-pill {
+        width: 100%;
+        justify-content: space-between;
+        box-sizing: border-box;
+    }
 }
 
 /* 모바일 반응형 스타일 */
@@ -681,48 +738,6 @@
         gap: 6px;
     }
 
-    .jugot-scope .auth-header {
-        padding: 10px 15px;
-    }
-
-    .jugot-scope .admin-link-btn {
-        padding: 6px 12px;
-        font-size: 12px;
-        margin-right: 8px;
-    }
-
-    .jugot-scope .info-edit-btn {
-        padding: 6px 12px;
-        font-size: 12px;
-        margin-right: 8px;
-        gap: 4px;
-    }
-
-    .jugot-scope .info-edit-btn span:first-child {
-        font-size: 12px;
-    }
-
-    .jugot-scope .user-nickname {
-        font-size: 13px;
-        padding: 8px 12px;
-    }
-
-    .jugot-scope .auth-buttons {
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-
-    .jugot-scope .login-btn,
-    .jugot-scope .logout-btn,
-    .jugot-scope .research-btn {
-        padding: 8px 16px;
-        font-size: 12px;
-    }
-
-    .jugot-scope .user-info {
-        gap: 10px;
-        flex-wrap: wrap;
-    }
 }
 
 @media (max-width: 480px) {
@@ -776,46 +791,4 @@
         gap: 4px;
     }
 
-    .jugot-scope .auth-header {
-        padding: 8px 10px;
-    }
-
-    .jugot-scope .admin-link-btn {
-        padding: 5px 10px;
-        font-size: 11px;
-        margin-right: 6px;
-    }
-
-    .jugot-scope .info-edit-btn {
-        padding: 5px 10px;
-        font-size: 11px;
-        margin-right: 6px;
-        gap: 3px;
-    }
-
-    .jugot-scope .info-edit-btn span:first-child {
-        font-size: 11px;
-    }
-
-    .jugot-scope .user-nickname {
-        font-size: 12px;
-        padding: 6px 10px;
-    }
-
-    .jugot-scope .auth-buttons {
-        gap: 6px;
-        flex-wrap: wrap;
-    }
-
-    .jugot-scope .login-btn,
-    .jugot-scope .logout-btn,
-    .jugot-scope .research-btn {
-        padding: 6px 12px;
-        font-size: 11px;
-    }
-
-    .jugot-scope .user-info {
-        gap: 8px;
-        flex-wrap: wrap;
-    }
 }
