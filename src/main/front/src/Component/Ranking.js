@@ -214,7 +214,7 @@ const Ranking = () => {
             {data.length === 0 ? (
                 <p className="empty-message">데이터가 없습니다.</p>
             ) : (
-                <table className="stock-table sticky-name-column">
+                <table className="stock-table">
                     <thead>
                         <tr>
                             <th>순위</th>
@@ -255,7 +255,7 @@ const Ranking = () => {
             {data.length === 0 ? (
                 <p className="empty-message">진행 중인 실매매가 없습니다.</p>
             ) : (
-                <table className="stock-table sticky-name-column">
+                <table className="stock-table">
                     <thead>
                         <tr>
                             <th>순위</th>
