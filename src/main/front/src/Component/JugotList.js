@@ -9,12 +9,12 @@ const JugotList = () => {
     // 현재 표시할 월 인덱스 (0부터 시작)
     const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
 
-    // 최근 6개월의 year와 month 배열 생성
+    // 최근 10개월의 year와 month 배열 생성
     // 현재 날짜를 함수 내부에서 계산하여 항상 최신 날짜를 사용
-    const getRecent6Months = () => {
+    const getRecent10Months = () => {
         const now = new Date();
         const months = [];
-        for (let i = 5; i >= 0; i--) {
+        for (let i = 9; i >= 0; i--) {
             const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
             months.push({
                 year: date.getFullYear(),
@@ -82,7 +82,7 @@ const JugotList = () => {
     
 
     // 캐시 관련 함수들
-    const CACHE_KEY = `jugot_data_recent_6months`;
+    const CACHE_KEY = `jugot_data_recent_10months`;
     const CACHE_DURATION = 30 * 60 * 1000; // 30분 (밀리초)
 
     const getCachedData = () => {
@@ -244,12 +244,12 @@ const JugotList = () => {
 
                 console.log('새로운 데이터를 가져옵니다.');
                 const allMonthsData = {};
-                const recentMonths = getRecent6Months();
+                const recentMonths = getRecent10Months();
                 
                 // 디버깅: 요청할 월 목록 출력
-                console.log('최근 6개월 범위:', recentMonths.map(m => `${m.year}년 ${m.month}월`).join(', '));
+                console.log('최근 10개월 범위:', recentMonths.map(m => `${m.year}년 ${m.month}월`).join(', '));
 
-                // 최근 6개월의 데이터를 가져오기
+                // 최근 10개월의 데이터를 가져오기
                 for (const { year, month } of recentMonths) {
                     try {
                         const response = await fetch(`/api/jugot/all?year=${year}&month=${month}`);
@@ -280,7 +280,7 @@ const JugotList = () => {
                 setCurrentMonthIndex(0);
                 
             } catch (error) {
-                console.error('Error fetching recent 6 months data:', error);
+                console.error('Error fetching recent 10 months data:', error);
                 setAllWeeksData({});
             } finally {
                 setLoading(false);
@@ -368,6 +368,41 @@ const JugotList = () => {
         }
     };
 
+    // 보여줄 월 목록 계산 (최대 4개만 표시, 슬라이딩 윈도우 방식)
+    const getVisibleMonths = useMemo(() => {
+        const maxVisible = 4;
+        const totalMonths = monthList.length;
+        
+        if (totalMonths <= maxVisible) {
+            // 전체가 4개 이하면 모두 표시
+            return monthList.map((month, index) => ({ month, index }));
+        }
+        
+        // 슬라이딩 윈도우 계산
+        let startIndex = 0;
+        let endIndex = maxVisible;
+        
+        // 현재 인덱스가 뒤쪽에 있으면 현재를 포함한 뒤쪽 4개
+        if (currentMonthIndex >= totalMonths - maxVisible) {
+            // 끝에서 4개
+            startIndex = totalMonths - maxVisible;
+            endIndex = totalMonths;
+        } else if (currentMonthIndex < maxVisible) {
+            // 앞쪽에 있으면 앞에서 4개
+            startIndex = 0;
+            endIndex = maxVisible;
+        } else {
+            // 중간에 있으면 현재를 포함한 앞쪽 4개 (현재가 마지막에서 2번째)
+            startIndex = currentMonthIndex - (maxVisible - 1);
+            endIndex = currentMonthIndex + 1;
+        }
+        
+        return monthList.slice(startIndex, endIndex).map((month, relativeIndex) => ({
+            month,
+            index: startIndex + relativeIndex
+        }));
+    }, [monthList, currentMonthIndex]);
+
     return (
         <div>
             {isUpdating && (
@@ -377,7 +412,7 @@ const JugotList = () => {
                 </div>
             )}
             {monthList.length === 0 ? (
-                <p>최근 6개월 데이터가 없습니다.</p>
+                <p>최근 10개월 데이터가 없습니다.</p>
             ) : (
                 <>
                     {/* 페이지네이션 UI */}
@@ -390,9 +425,9 @@ const JugotList = () => {
                             ←
                         </button>
                         
-                        {/* 월별 페이지 번호 */}
+                        {/* 월별 페이지 번호 (최대 4개만 표시) */}
                         <div className="pagination-month-buttons">
-                            {monthList.map((month, index) => (
+                            {getVisibleMonths.map(({ month, index }) => (
                                 <button
                                     key={month}
                                     className={`pagination-month-button ${currentMonthIndex === index ? 'active' : ''}`}

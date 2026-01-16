@@ -10,8 +10,8 @@ const Ranking = () => {
     const [activeTab, setActiveTab] = useState('gainers'); // 'gainers', 'losers', 또는 'realtrade'
     const [isUpdating, setIsUpdating] = useState(false);
 
-    // JugotList와 동일한 캐시 키 사용 (최근 6개월)
-    const CACHE_KEY = `jugot_data_recent_6months`;
+    // JugotList와 동일한 캐시 키 사용 (최근 10개월)
+    const CACHE_KEY = `jugot_data_recent_10months`;
 
     // 캐시에서 데이터를 가져오는 함수
     const getCachedData = () => {

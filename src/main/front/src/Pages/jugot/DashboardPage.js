@@ -171,7 +171,7 @@ const DashboardPage = () => {
             setIsRefreshing(true);
             
             // 1. 캐시 무효화 (DB에서 최신 데이터를 다시 가져오도록 함)
-            const CACHE_KEY = 'jugot_data_recent_6months';
+            const CACHE_KEY = 'jugot_data_recent_10months';
             localStorage.removeItem(CACHE_KEY);
             
             // 2. refreshKey 증가하여 컴포넌트 강제 리렌더링
