@@ -204,10 +204,11 @@ const DashboardPage = () => {
                             <span>관리자</span>
                         </Link>
                     )}
-                    <button onClick={() => navigate('/Scalping')} className="glass-btn btn-primary">
+                    {/* 원래 코드: <button onClick={() => navigate('/Scalping')} className="glass-btn btn-primary"> */}
+                    <a href="https://scalping.kro.kr" target="_blank" rel="noopener noreferrer" className="glass-btn btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                         <Icons.Lab />
                         <span>연구소</span>
-                    </button>
+                    </a>
                 </div>
                 <div className="header-actions-right">
                     {isLoggedIn ? (

@@ -16,9 +16,10 @@ const HomePage = () => {
                     </Link>
 
                     {/* 스캘핑 연구소로 이동 */}
-                    <Link to="/Scalping" className="dashboard-link">
+                    {/* 원래 코드: <Link to="/Scalping" className="dashboard-link">스캘핑 연구소로 이동</Link> */}
+                    <a href="https://scalping.kro.kr" className="dashboard-link" target="_blank" rel="noopener noreferrer">
                         스캘핑 연구소로 이동
-                    </Link>
+                    </a>
                 </div>
             </div>
     );
