@@ -359,7 +359,6 @@ const RealTrade = () => {
 
     return (
         <div className="content">
-            <h2>실매매</h2>
             {isUpdating && (
                 <div className="update-notification">
                     <div className="mini-spinner"></div>

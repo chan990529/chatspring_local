@@ -188,9 +188,6 @@ const PersonalTrade = () => {
 
     return (
         <div className="content">
-            <p style={{ marginBottom: '20px', color: 'rgba(255, 255, 255, 0.8)' }}>
-                참여자를 선택하면 해당 참여자가 참여 중인 실매매 현황을 확인할 수 있습니다.
-            </p>
 
             <div style={{
                 display: 'flex',

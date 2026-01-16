@@ -293,7 +293,6 @@ const JugotList = () => {
     if (loading) {
         return (
             <div>
-                <h2>주곳리스트 (최근 6개월)</h2>
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
