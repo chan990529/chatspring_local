@@ -105,25 +105,31 @@
     font-size: 20px;
 }
 
-/* 5. 테이블 내부 스타일 */
+/* 5. 테이블 내부 스타일 (모던 미니멀 수정안) */
 .jugot-scope .stock-table {
     width: 100%;
-    min-width: 800px; /* 최소 너비 설정으로 가로 스크롤 유도 */
-    border-collapse: collapse;
+    min-width: 800px;
+    border-collapse: collapse; /* 선을 합쳐서 깔끔하게 */
     margin-top: 15px;
+    color: #e0e0e0;
 }
 
+/* 모든 테두리 초기화 후 하단 선만 은은하게 부여 */
 .jugot-scope .stock-table th,
 .jugot-scope .stock-table td {
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 14px 15px;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* 아주 옅은 실선 */
+    padding: 16px 20px; /* 여백을 넓혀서 시원하게 */
     text-align: left;
 }
 
+/* 헤더 스타일: 배경 없이 텍스트로 강조 */
 .jugot-scope .stock-table th {
     background-color: transparent;
-    font-weight: bold;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.6); /* 약간 회색빛이 도는 흰색으로 차분하게 */
+    font-weight: 600;
+    font-size: 0.95em;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15); /* 헤더 아래는 조금 더 진한 선 */
     white-space: nowrap;
 }
 
@@ -136,18 +142,29 @@
     white-space: nowrap;
 }
 
+/* 데이터 셀 스타일 */
 .jugot-scope .stock-table td {
-    color: #e0e0e0;
+    font-weight: 400;
+    color: #ffffff;
+    transition: color 0.2s;
     white-space: nowrap;
 }
 
+/* 첫 번째 컬럼(종목명 등) 강조 */
 .jugot-scope .stock-table td:first-child {
     font-weight: bold;
     color: #fff;
+    font-size: 1.05em; /* 살짝 키움 */
+}
+
+/* 호버 효과: 전체 행이 밝아지며 하이라이트 */
+.jugot-scope .stock-table tbody tr {
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .jugot-scope .stock-table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.12); /* 기존보다 조금 더 밝게 */
+    /* transform: scale(1.01); /* (선택사항) 마우스 올리면 살짝 커지는 효과 */
 }
 
 /* 6. 정렬 아이콘 스타일 */
