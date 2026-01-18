@@ -188,11 +188,11 @@ const StockTable = ({ title, data }) => {
             <table className="stock-table">
                 <thead>
                 <tr>
-                    {headers.map(({ label, key }) => (
+                    {headers.map(({ label, key }, idx) => (
                         <th
                             key={key}
                             onClick={() => requestSort(key)}
-                            className={`sortable-header ${getSortClassName(key)}`}
+                            className={`sortable-header ${getSortClassName(key)} ${key === 'name' ? 'sticky-column' : ''}`}
                         >
                             {label}
                         </th>
@@ -203,7 +203,7 @@ const StockTable = ({ title, data }) => {
                 {/* 정렬된 데이터를 사용하여 테이블 행을 렌더링합니다. */}
                 {sortedData.map((item, index) => (
                     <tr key={index}>
-                        <td>{item.name}</td>
+                        <td className="sticky-column">{item.name}</td>
                         <td>{formatDate(item.captureDate)}</td>
                         <td>{formatDaysElapsed(item.daysElapsed)}</td>
                         <td>{formatNumber(item.capturePrice)}</td>
