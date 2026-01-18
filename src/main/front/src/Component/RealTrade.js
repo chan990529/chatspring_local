@@ -378,146 +378,149 @@ const RealTrade = () => {
                 </div>
             ) : (
                 <div className="stock-table-container">
-                    <table className="stock-table">
-                        <thead>
-                            <tr>
-                                <th>종목명</th>
-                                <th>종목코드</th>
-                                <th>평단가</th>
-                                <th>시작일</th>
-                                <th>경과일</th>
-                                <th>매수 횟수</th>
-                                <th>참여자</th>
-                                <th>상태</th>
-                                <th>상세보기</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {realTrades.map((trade) => {
-                                const participantNicknames = getParticipantNicknames(trade.participants);
-                                const isUserParticipating = participantNicknames.includes(currentUserNickname);
-                                
-                                return (
-                                <tr 
-                                    key={trade.id}
-                                    onClick={() => handleStockClick(trade.id, trade.participants)}
-                                    style={{
-                                        cursor: isLoggedIn ? 'pointer' : 'default',
-                                        transition: 'background-color 0.2s',
-                                        // 내가 참여 중인 항목 강조 (배경색 미세하게 변경)
-                                        backgroundColor: isUserParticipating 
-                                            ? 'rgba(76, 175, 80, 0.15)' 
-                                            : undefined
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        if (isLoggedIn) {
-                                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                                        }
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        // 마우스가 벗어날 때 원래 배경색으로 복원 (참여 중이면 강조 색상)
-                                        if (isUserParticipating) {
-                                            e.currentTarget.style.backgroundColor = 'rgba(76, 175, 80, 0.15)';
-                                        } else {
-                                            e.currentTarget.style.backgroundColor = '';
-                                        }
-                                    }}
-                                >
-                                    <td>{trade.stockName || '-'}</td>
-                                    <td>{trade.stockCode || '-'}</td>
-                                    <td>{formatAveragePriceWithProfit(trade.averagePrice, trade.buyPrice, trade.currentPrice)}</td>
-                                    <td>{formatDate(trade.startDate)}</td>
-                                    <td>{formatDaysElapsed(calculateDaysElapsed(trade.startDate))}</td>
-                                    <td>{trade.currentBuyCount || 0}</td>
-                                    <td 
-                                        style={{ 
-                                            position: 'relative'
+                    {/* 테이블만 감싸는 래퍼 추가 */}
+                    <div className="table-scroll-wrapper">
+                        <table className="stock-table">
+                            <thead>
+                                <tr>
+                                    <th>종목명</th>
+                                    <th>종목코드</th>
+                                    <th>평단가</th>
+                                    <th>시작일</th>
+                                    <th>경과일</th>
+                                    <th>매수 횟수</th>
+                                    <th>참여자</th>
+                                    <th>상태</th>
+                                    <th>상세보기</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {realTrades.map((trade) => {
+                                    const participantNicknames = getParticipantNicknames(trade.participants);
+                                    const isUserParticipating = participantNicknames.includes(currentUserNickname);
+                                    
+                                    return (
+                                    <tr 
+                                        key={trade.id}
+                                        onClick={() => handleStockClick(trade.id, trade.participants)}
+                                        style={{
+                                            cursor: isLoggedIn ? 'pointer' : 'default',
+                                            transition: 'background-color 0.2s',
+                                            // 내가 참여 중인 항목 강조 (배경색 미세하게 변경)
+                                            backgroundColor: isUserParticipating 
+                                                ? 'rgba(76, 175, 80, 0.15)' 
+                                                : undefined
                                         }}
-                                        onClick={(e) => e.stopPropagation()}
+                                        onMouseEnter={(e) => {
+                                            if (isLoggedIn) {
+                                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            // 마우스가 벗어날 때 원래 배경색으로 복원 (참여 중이면 강조 색상)
+                                            if (isUserParticipating) {
+                                                e.currentTarget.style.backgroundColor = 'rgba(76, 175, 80, 0.15)';
+                                            } else {
+                                                e.currentTarget.style.backgroundColor = '';
+                                            }
+                                        }}
                                     >
-                                        {participantNicknames.length > 0 ? (
+                                        <td>{trade.stockName || '-'}</td>
+                                        <td>{trade.stockCode || '-'}</td>
+                                        <td>{formatAveragePriceWithProfit(trade.averagePrice, trade.buyPrice, trade.currentPrice)}</td>
+                                        <td>{formatDate(trade.startDate)}</td>
+                                        <td>{formatDaysElapsed(calculateDaysElapsed(trade.startDate))}</td>
+                                        <td>{trade.currentBuyCount || 0}</td>
+                                        <td 
+                                            style={{ 
+                                                position: 'relative'
+                                            }}
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            {participantNicknames.length > 0 ? (
+                                                <button
+                                                    onClick={(e) => handleViewMembers(e, trade.participants, trade.stockName)}
+                                                    style={{
+                                                        padding: '4px 12px',
+                                                        backgroundColor: 'rgba(76, 175, 80, 0.3)',
+                                                        color: '#fff',
+                                                        border: '1px solid rgba(76, 175, 80, 0.5)',
+                                                        borderRadius: '4px',
+                                                        cursor: 'pointer',
+                                                        fontSize: '12px',
+                                                        transition: 'background-color 0.2s'
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.backgroundColor = 'rgba(76, 175, 80, 0.5)';
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.backgroundColor = 'rgba(76, 175, 80, 0.3)';
+                                                    }}
+                                                >
+                                                    보기 ({participantNicknames.length}명)
+                                                </button>
+                                            ) : (
+                                                '-'
+                                            )}
+                                        </td>
+                                        <td>
+                                            <span style={{
+                                                padding: '4px 8px',
+                                                borderRadius: '4px',
+                                                backgroundColor: trade.status === 'ACTIVE' 
+                                                    ? 'rgba(76, 175, 80, 0.3)' 
+                                                    : trade.status === 'PAUSED'
+                                                    ? 'rgba(255, 152, 0, 0.3)'
+                                                    : trade.status === 'COMPLETED'
+                                                    ? 'rgba(158, 158, 158, 0.3)'
+                                                    : 'rgba(158, 158, 158, 0.3)',
+                                                color: '#fff',
+                                                fontSize: '12px',
+                                                border: `1px solid ${trade.status === 'ACTIVE' 
+                                                    ? 'rgba(76, 175, 80, 0.5)' 
+                                                    : trade.status === 'PAUSED'
+                                                    ? 'rgba(255, 152, 0, 0.5)'
+                                                    : trade.status === 'COMPLETED'
+                                                    ? 'rgba(158, 158, 158, 0.5)'
+                                                    : 'rgba(158, 158, 158, 0.5)'}`
+                                            }}>
+                                                {trade.status === 'ACTIVE' ? '진행중' : trade.status === 'PAUSED' ? '중단' : trade.status === 'COMPLETED' ? '완료' : trade.status}
+                                            </span>
+                                        </td>
+                                        <td 
+                                            style={{ 
+                                                position: 'relative'
+                                            }}
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
                                             <button
-                                                onClick={(e) => handleViewMembers(e, trade.participants, trade.stockName)}
+                                                onClick={(e) => handleViewDetails(e, trade)}
                                                 style={{
                                                     padding: '4px 12px',
-                                                    backgroundColor: 'rgba(76, 175, 80, 0.3)',
+                                                    backgroundColor: 'rgba(100, 149, 237, 0.3)',
                                                     color: '#fff',
-                                                    border: '1px solid rgba(76, 175, 80, 0.5)',
+                                                    border: '1px solid rgba(100, 149, 237, 0.5)',
                                                     borderRadius: '4px',
                                                     cursor: 'pointer',
                                                     fontSize: '12px',
                                                     transition: 'background-color 0.2s'
                                                 }}
                                                 onMouseEnter={(e) => {
-                                                    e.currentTarget.style.backgroundColor = 'rgba(76, 175, 80, 0.5)';
+                                                    e.currentTarget.style.backgroundColor = 'rgba(100, 149, 237, 0.5)';
                                                 }}
                                                 onMouseLeave={(e) => {
-                                                    e.currentTarget.style.backgroundColor = 'rgba(76, 175, 80, 0.3)';
+                                                    e.currentTarget.style.backgroundColor = 'rgba(100, 149, 237, 0.3)';
                                                 }}
                                             >
-                                                보기 ({participantNicknames.length}명)
+                                                상세보기
                                             </button>
-                                        ) : (
-                                            '-'
-                                        )}
-                                    </td>
-                                    <td>
-                                        <span style={{
-                                            padding: '4px 8px',
-                                            borderRadius: '4px',
-                                            backgroundColor: trade.status === 'ACTIVE' 
-                                                ? 'rgba(76, 175, 80, 0.3)' 
-                                                : trade.status === 'PAUSED'
-                                                ? 'rgba(255, 152, 0, 0.3)'
-                                                : trade.status === 'COMPLETED'
-                                                ? 'rgba(158, 158, 158, 0.3)'
-                                                : 'rgba(158, 158, 158, 0.3)',
-                                            color: '#fff',
-                                            fontSize: '12px',
-                                            border: `1px solid ${trade.status === 'ACTIVE' 
-                                                ? 'rgba(76, 175, 80, 0.5)' 
-                                                : trade.status === 'PAUSED'
-                                                ? 'rgba(255, 152, 0, 0.5)'
-                                                : trade.status === 'COMPLETED'
-                                                ? 'rgba(158, 158, 158, 0.5)'
-                                                : 'rgba(158, 158, 158, 0.5)'}`
-                                        }}>
-                                            {trade.status === 'ACTIVE' ? '진행중' : trade.status === 'PAUSED' ? '중단' : trade.status === 'COMPLETED' ? '완료' : trade.status}
-                                        </span>
-                                    </td>
-                                    <td 
-                                        style={{ 
-                                            position: 'relative'
-                                        }}
-                                        onClick={(e) => e.stopPropagation()}
-                                    >
-                                        <button
-                                            onClick={(e) => handleViewDetails(e, trade)}
-                                            style={{
-                                                padding: '4px 12px',
-                                                backgroundColor: 'rgba(100, 149, 237, 0.3)',
-                                                color: '#fff',
-                                                border: '1px solid rgba(100, 149, 237, 0.5)',
-                                                borderRadius: '4px',
-                                                cursor: 'pointer',
-                                                fontSize: '12px',
-                                                transition: 'background-color 0.2s'
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = 'rgba(100, 149, 237, 0.5)';
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = 'rgba(100, 149, 237, 0.3)';
-                                            }}
-                                        >
-                                            상세보기
-                                        </button>
-                                    </td>
-                                </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                                        </td>
+                                    </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             )}
 
