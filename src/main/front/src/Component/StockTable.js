@@ -184,37 +184,42 @@ const StockTable = ({ title, data }) => {
 
     return (
         <div className="stock-table-container">
+            {/* 제목은 스크롤 영역 밖에 위치 */}
             <h3>{title}</h3>
-            <table className="stock-table">
-                <thead>
-                <tr>
-                    {headers.map(({ label, key }) => (
-                        <th
-                            key={key}
-                            onClick={() => requestSort(key)}
-                            className={`sortable-header ${getSortClassName(key)}`}
-                        >
-                            {label}
-                        </th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {/* 정렬된 데이터를 사용하여 테이블 행을 렌더링합니다. */}
-                {sortedData.map((item, index) => (
-                    <tr key={index}>
-                        <td>{item.name}</td>
-                        <td>{formatDate(item.captureDate)}</td>
-                        <td>{formatDaysElapsed(item.daysElapsed)}</td>
-                        <td>{formatNumber(item.capturePrice)}</td>
-                        <td>{formatPriceWithPercentage(item.currentPrice, item.capturePrice)}</td>
-                        <td>{formatPriceWithPercentage(item.highestPrice, item.capturePrice)}</td>
-                        <td>{formatPriceWithPercentage(item.lowestPrice, item.capturePrice)}</td>
-                        <td>{item.marketType || '-'}</td>
+            
+            {/* 테이블만 감싸는 래퍼 추가 */}
+            <div className="table-scroll-wrapper">
+                <table className="stock-table">
+                    <thead>
+                    <tr>
+                        {headers.map(({ label, key }) => (
+                            <th
+                                key={key}
+                                onClick={() => requestSort(key)}
+                                className={`sortable-header ${getSortClassName(key)}`}
+                            >
+                                {label}
+                            </th>
+                        ))}
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {/* 정렬된 데이터를 사용하여 테이블 행을 렌더링합니다. */}
+                    {sortedData.map((item, index) => (
+                        <tr key={index}>
+                            <td>{item.name}</td>
+                            <td>{formatDate(item.captureDate)}</td>
+                            <td>{formatDaysElapsed(item.daysElapsed)}</td>
+                            <td>{formatNumber(item.capturePrice)}</td>
+                            <td>{formatPriceWithPercentage(item.currentPrice, item.capturePrice)}</td>
+                            <td>{formatPriceWithPercentage(item.highestPrice, item.capturePrice)}</td>
+                            <td>{formatPriceWithPercentage(item.lowestPrice, item.capturePrice)}</td>
+                            <td>{item.marketType || '-'}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

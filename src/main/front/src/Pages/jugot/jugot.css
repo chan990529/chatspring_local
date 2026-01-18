@@ -92,8 +92,35 @@
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
     padding: 20px;
     margin-top: 30px;
-    overflow-x: auto;
+    overflow: hidden; /* 자식 요소가 둥근 모서리를 뚫고 나가지 않게 함 */
+}
+
+/* [신규] 테이블만 감싸는 스크롤 영역 */
+.jugot-scope .table-scroll-wrapper {
+    overflow-x: auto; /* 가로 스크롤은 여기에만 적용 */
     -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-top: 15px; /* 헤더와의 간격 */
+    padding-bottom: 5px; /* 스크롤바와 데이터 사이 간격 */
+}
+
+/* [선택] 스크롤바 디자인 (글래스모피즘 테마에 맞춤) */
+.jugot-scope .table-scroll-wrapper::-webkit-scrollbar {
+    height: 8px; /* 스크롤바 높이 */
+}
+
+.jugot-scope .table-scroll-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05); /* 트랙 배경 */
+    border-radius: 4px;
+}
+
+.jugot-scope .table-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3); /* 스크롤바 색상 */
+    border-radius: 4px;
+}
+
+.jugot-scope .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5); /* 호버 시 더 밝게 */
 }
 
 .jugot-scope .stock-table-container h3 {
@@ -120,7 +147,7 @@
     width: 100%;
     min-width: 800px;
     border-collapse: collapse; /* 선을 합쳐서 깔끔하게 */
-    margin-top: 15px;
+    margin-top: 0; /* table-scroll-wrapper에서 간격 처리 */
     color: #e0e0e0;
 }
 
