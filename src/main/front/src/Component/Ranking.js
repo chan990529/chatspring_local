@@ -217,8 +217,8 @@ const Ranking = () => {
                 <table className="stock-table">
                     <thead>
                         <tr>
-                            <th className="sticky-rank">순위</th>
-                            <th className="sticky-column">종목명</th>
+                            <th>순위</th>
+                            <th>종목명</th>
                             <th className="text-right">포착가</th>
                             <th className="text-right">포착일</th>
                             <th className="text-right">현재가</th>
@@ -228,12 +228,12 @@ const Ranking = () => {
                     <tbody>
                         {data.map((stock, index) => (
                             <tr key={`${stock.name}-${stock.weekKey}-${index}`}>
-                                <td className="sticky-rank">
+                                <td>
                                     <span className={`rank-badge ${isGainers ? 'gainers' : 'losers'}`}>
                                         {getRankDisplay(index + 1)}
                                     </span>
                                 </td>
-                                <td className="sticky-column">{stock.name}</td>
+                                <td>{stock.name}</td>
                                 <td className="text-right">{formatPrice(stock.capturePrice)}원</td>
                                 <td className="text-right">{formatDate(stock.captureDate)}</td>
                                 <td className="text-right">{formatPrice(stock.currentPrice)}원</td>
@@ -258,8 +258,8 @@ const Ranking = () => {
                 <table className="stock-table">
                     <thead>
                         <tr>
-                            <th className="sticky-rank">순위</th>
-                            <th className="sticky-column">종목명</th>
+                            <th>순위</th>
+                            <th>종목명</th>
                             <th>종목코드</th>
                             <th className="text-right">평단가</th>
                             <th className="text-right">현재가</th>
@@ -269,12 +269,12 @@ const Ranking = () => {
                     <tbody>
                         {data.map((trade, index) => (
                             <tr key={`${trade.id}-${index}`}>
-                                <td className="sticky-rank">
+                                <td>
                                     <span className="rank-badge gainers">
                                         {getRankDisplay(index + 1)}
                                     </span>
                                 </td>
-                                <td className="sticky-column">{trade.stockName || '-'}</td>
+                                <td>{trade.stockName || '-'}</td>
                                 <td>{trade.stockCode || '-'}</td>
                                 <td className="text-right">{formatPrice(trade.basePrice)}원</td>
                                 <td className="text-right">{formatPrice(trade.currentPrice)}원</td>

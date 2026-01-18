@@ -115,14 +115,13 @@
 
 .jugot-scope .stock-table th,
 .jugot-scope .stock-table td {
-    border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     padding: 14px 15px;
     text-align: left;
 }
 
 .jugot-scope .stock-table th {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: transparent;
     font-weight: bold;
     color: #fff;
     white-space: nowrap;
@@ -147,57 +146,6 @@
     color: #fff;
 }
 
-/* Sticky 종목명 컬럼 스타일 (Glass Morphism) */
-.jugot-scope .stock-table th.sticky-column,
-.jugot-scope .stock-table td.sticky-column,
-.stock-table th.sticky-column,
-.stock-table td.sticky-column {
-    position: sticky;
-    left: 0;
-    z-index: 10;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Ranking 테이블에서 순위 컬럼도 sticky로 설정 */
-.jugot-scope .stock-table th.sticky-rank,
-.jugot-scope .stock-table td.sticky-rank,
-.stock-table th.sticky-rank,
-.stock-table td.sticky-rank {
-    position: sticky;
-    left: 0;
-    z-index: 11;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-}
-
-/* 순위 컬럼 다음에 오는 종목명 컬럼의 left 값 조정 (순위 컬럼 너비만큼) */
-.jugot-scope .stock-table thead tr th.sticky-rank + th.sticky-column,
-.jugot-scope .stock-table tbody tr td.sticky-rank + td.sticky-column,
-.stock-table thead tr th.sticky-rank + th.sticky-column,
-.stock-table tbody tr td.sticky-rank + td.sticky-column {
-    left: 60px; /* 순위 컬럼의 대략적인 너비 */
-}
-
-.jugot-scope .stock-table thead th.sticky-column,
-.jugot-scope .stock-table thead th.sticky-rank {
-    z-index: 20;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.jugot-scope .stock-table tbody tr:hover td.sticky-column,
-.jugot-scope .stock-table tbody tr:hover td.sticky-rank {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
 .jugot-scope .stock-table tbody tr:hover {
     background-color: rgba(255, 255, 255, 0.08);
 }
@@ -210,7 +158,7 @@
 }
 
 .jugot-scope .sortable-header:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: transparent;
 }
 
 .jugot-scope .sortable-header::after {
