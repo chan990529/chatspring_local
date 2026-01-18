@@ -84,7 +84,7 @@
 
 /* 4. 글래스모피즘 스타일: 테이블 컨테이너 */
 .jugot-scope .stock-table-container {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 15px;
@@ -102,7 +102,6 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding-bottom: 10px;
     margin-top: 0;
-    font-size: 20px;
 }
 
 /* 5. 테이블 내부 스타일 */
@@ -122,28 +121,15 @@
 }
 
 .jugot-scope .stock-table th {
-    background-color: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background-color: rgba(255, 255, 255, 0.1);
     font-weight: bold;
     color: #fff;
     white-space: nowrap;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* RealTrade 및 다른 테이블을 위한 일반 스타일 (jugot-scope 밖에서도 작동) */
 .stock-table th {
     white-space: nowrap;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background-color: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .stock-table td {
@@ -245,58 +231,6 @@
     transform: translateY(-2px);
 }
 
-/* 업데이트 알림 배너 (글래스모피즘 스타일) */
-.jugot-scope .update-notification,
-.update-notification {
-    background: rgba(255, 152, 0, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 152, 0, 0.3);
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(255, 140, 0, 0.15);
-    color: #ffe0b2;
-    padding: 15px 20px;
-    margin-bottom: 25px;
-    text-align: center;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    animation: gentle-pulse 2.5s infinite ease-in-out;
-}
-
-@keyframes gentle-pulse {
-    0% {
-        background: rgba(255, 152, 0, 0.1);
-        border-color: rgba(255, 152, 0, 0.3);
-    }
-    50% {
-        background: rgba(255, 152, 0, 0.2);
-        border-color: rgba(255, 152, 0, 0.6);
-        box-shadow: 0 4px 25px rgba(255, 140, 0, 0.25);
-    }
-    100% {
-        background: rgba(255, 152, 0, 0.1);
-        border-color: rgba(255, 152, 0, 0.3);
-    }
-}
-
-.jugot-scope .mini-spinner,
-.mini-spinner {
-    width: 18px;
-    height: 18px;
-    border: 2px solid rgba(255, 224, 178, 0.2);
-    border-top: 2px solid #ffe0b2;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 /* 8. 주식 가격 상승/하락 색상 스타일 */
 .jugot-scope .price-up {
     color: #ff6b6b; /* 빨간색 - 상승 */
@@ -357,76 +291,6 @@
     margin-top: 20px;
 }
 
-/* 페이지네이션 스타일 */
-.jugot-scope .pagination-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-}
-
-.jugot-scope .pagination-nav-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    color: #fff;
-    background-color: transparent;
-    transition: all 0.3s ease;
-}
-
-.jugot-scope .pagination-nav-button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.jugot-scope .pagination-nav-button:not(:disabled) {
-    background-color: transparent;
-}
-
-.jugot-scope .pagination-nav-button:not(:disabled):hover {
-    background-color: rgba(255, 255, 255, 0.08);
-}
-
-.jugot-scope .pagination-month-buttons {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.jugot-scope .pagination-month-button {
-    padding: 10px 16px;
-    font-size: 16px;
-    border: 1px solid transparent;
-    border-radius: 18px;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.85);
-    min-width: 100px;
-    transition: all 0.3s ease;
-    background-color: transparent;
-}
-
-.jugot-scope .pagination-month-button.active {
-    border-color: rgba(255, 255, 255, 0.8);
-    color: #fff;
-    font-weight: bold;
-}
-
-.jugot-scope .pagination-month-button:not(.active) {
-    background-color: transparent;
-}
-
-.jugot-scope .pagination-month-button:not(.active):hover {
-    color: #fff;
-    background-color: rgba(255, 255, 255, 0.06);
-}
-
 .jugot-scope .ranking-flex-container {
     display: flex;
     gap: 30px;
@@ -467,11 +331,11 @@
 }
 
 .jugot-scope .rank-badge.gainers {
-    background-color: transparent;
+    background-color: #ff6b6b;
 }
 
 .jugot-scope .rank-badge.losers {
-    background-color: transparent;
+    background-color: #4ecdc4;
 }
 
 .jugot-scope .change-rate {
@@ -525,158 +389,53 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* 10. 인증 헤더 및 버튼 스타일 (통일된 글래스모피즘) */
+/* 인증 헤더 스타일 */
 .jugot-scope .auth-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 10px;
-    margin-bottom: 20px;
+    justify-content: flex-end;
+    padding: 15px 20px;
+    margin-bottom: 10px;
 }
 
-.jugot-scope .header-actions-left,
-.jugot-scope .header-actions-right {
+.jugot-scope .auth-header-content {
     display: flex;
     align-items: center;
-    gap: 12px;
 }
 
-.jugot-scope .glass-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.1);
+.jugot-scope .login-btn,
+.jugot-scope .logout-btn {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    color: rgba(255, 255, 255, 0.9);
+    border-radius: 25px;
+    color: #fff;
     font-size: 14px;
     font-weight: 600;
-    text-decoration: none;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease;
 }
 
-.jugot-scope .glass-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
+.jugot-scope .login-btn:hover,
+.jugot-scope .logout-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    color: #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.jugot-scope .glass-btn svg {
-    opacity: 0.9;
-}
-
-.jugot-scope .glass-btn.btn-danger {
-    background: rgba(255, 107, 107, 0.15);
-    border-color: rgba(255, 107, 107, 0.4);
-    color: #ff6b6b;
-}
-
-.jugot-scope .glass-btn.btn-danger:hover {
-    background: rgba(255, 107, 107, 0.25);
-    color: #fff;
-}
-
-.jugot-scope .glass-btn.btn-primary,
-.jugot-scope .glass-btn.btn-accent {
-    background: rgba(68, 138, 255, 0.15);
-    border-color: rgba(68, 138, 255, 0.4);
-    color: #82b1ff;
-}
-
-.jugot-scope .glass-btn.btn-primary:hover,
-.jugot-scope .glass-btn.btn-accent:hover {
-    background: rgba(68, 138, 255, 0.3);
-    color: #fff;
-    box-shadow: 0 0 15px rgba(68, 138, 255, 0.3);
-}
-
-.jugot-scope .glass-btn.btn-outline {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.jugot-scope .glass-btn.btn-outline:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
-.jugot-scope .user-profile-pill {
+.jugot-scope .user-info {
     display: flex;
     align-items: center;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 15px;
+}
+
+.jugot-scope .user-nickname {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    padding: 4px 6px 4px 16px;
-    backdrop-filter: blur(5px);
-}
-
-.jugot-scope .nickname-text {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #e0e0e0;
-    margin-right: 8px;
-}
-
-.jugot-scope .divider {
-    width: 1px;
-    height: 16px;
-    background: rgba(255, 255, 255, 0.15);
-    margin: 0 4px;
-}
-
-.jugot-scope .icon-only-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.6);
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.jugot-scope .icon-only-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    transform: rotate(30deg);
-}
-
-@media (max-width: 768px) {
-    .jugot-scope .auth-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: stretch;
-    }
-
-    .jugot-scope .header-actions-left,
-    .jugot-scope .header-actions-right {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .jugot-scope .glass-btn {
-        padding: 6px 12px;
-        font-size: 13px;
-    }
-
-    .jugot-scope .user-profile-pill {
-        width: 100%;
-        justify-content: space-between;
-        box-sizing: border-box;
-    }
 }
 
 /* 모바일 반응형 스타일 */
@@ -724,33 +483,6 @@
         padding: 10px 15px;
         font-size: 14px;
     }
-
-    .jugot-scope .ranking-tabs button {
-        padding: 10px 15px;
-        font-size: 14px;
-    }
-
-    .jugot-scope .pagination-container {
-        gap: 8px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    .jugot-scope .pagination-nav-button {
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-
-    .jugot-scope .pagination-month-button {
-        padding: 8px 12px;
-        font-size: 14px;
-        min-width: 80px;
-    }
-
-    .jugot-scope .pagination-month-buttons {
-        gap: 6px;
-    }
-
 }
 
 @media (max-width: 480px) {
@@ -777,31 +509,4 @@
     .jugot-scope .stock-table-container h3 {
         font-size: 14px;
     }
-
-    .jugot-scope .ranking-tabs button {
-        padding: 8px 12px;
-        font-size: 12px;
-    }
-
-    .jugot-scope .pagination-container {
-        gap: 6px;
-        margin-top: 15px;
-        margin-bottom: 15px;
-    }
-
-    .jugot-scope .pagination-nav-button {
-        padding: 6px 12px;
-        font-size: 12px;
-    }
-
-    .jugot-scope .pagination-month-button {
-        padding: 6px 10px;
-        font-size: 12px;
-        min-width: 70px;
-    }
-
-    .jugot-scope .pagination-month-buttons {
-        gap: 4px;
-    }
-
 }
