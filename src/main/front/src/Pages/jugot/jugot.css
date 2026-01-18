@@ -122,15 +122,28 @@
 }
 
 .jugot-scope .stock-table th {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     font-weight: bold;
     color: #fff;
     white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* RealTrade 및 다른 테이블을 위한 일반 스타일 (jugot-scope 밖에서도 작동) */
 .stock-table th {
     white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .stock-table td {
