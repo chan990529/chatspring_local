@@ -58,15 +58,18 @@ const PersonalTrade = () => {
                 }
             );
 
-            // 응답 데이터를 정렬: ACTIVE 먼저, 그 다음 COMPLETED
+            // 응답 데이터를 정렬: ACTIVE(진행중) -> PAUSED(중단) -> COMPLETED(완료) 순서
             const sortedTrades = (response.data || []).sort((a, b) => {
-                // ACTIVE가 COMPLETED보다 앞에 오도록
-                if (a.status === 'ACTIVE' && b.status === 'COMPLETED') {
-                    return -1;
+                // 상태별 우선순위 정의
+                const statusOrder = { 'ACTIVE': 1, 'PAUSED': 2, 'COMPLETED': 3 };
+                const aOrder = statusOrder[a.status] || 999;
+                const bOrder = statusOrder[b.status] || 999;
+                
+                // 상태 우선순위로 정렬
+                if (aOrder !== bOrder) {
+                    return aOrder - bOrder;
                 }
-                if (a.status === 'COMPLETED' && b.status === 'ACTIVE') {
-                    return 1;
-                }
+                
                 // 같은 상태면 생성일 내림차순
                 if (a.createdAt && b.createdAt) {
                     return new Date(b.createdAt) - new Date(a.createdAt);
