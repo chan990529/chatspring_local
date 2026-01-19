@@ -214,36 +214,38 @@ const Ranking = () => {
             {data.length === 0 ? (
                 <p className="empty-message">데이터가 없습니다.</p>
             ) : (
-                <table className="stock-table">
-                    <thead>
-                        <tr>
-                            <th>순위</th>
-                            <th>종목명</th>
-                            <th className="text-right">포착가</th>
-                            <th className="text-right">포착일</th>
-                            <th className="text-right">현재가</th>
-                            <th className="text-right">{isGainers ? '상승률' : '하락률'}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((stock, index) => (
-                            <tr key={`${stock.name}-${stock.weekKey}-${index}`}>
-                                <td>
-                                    <span className={`rank-badge ${isGainers ? 'gainers' : 'losers'}`}>
-                                        {getRankDisplay(index + 1)}
-                                    </span>
-                                </td>
-                                <td>{stock.name}</td>
-                                <td className="text-right">{formatPrice(stock.capturePrice)}원</td>
-                                <td className="text-right">{formatDate(stock.captureDate)}</td>
-                                <td className="text-right">{formatPrice(stock.currentPrice)}원</td>
-                                <td className={`text-right change-rate ${stock.changeRate >= 0 ? 'positive' : 'negative'}`}>
-                                    {formatChangeRate(stock.changeRate)}
-                                </td>
+                <div className="table-scroll-wrapper">
+                    <table className="stock-table">
+                        <thead>
+                            <tr>
+                                <th>순위</th>
+                                <th>종목명</th>
+                                <th className="text-right">포착가</th>
+                                <th className="text-right">포착일</th>
+                                <th className="text-right">현재가</th>
+                                <th className="text-right">{isGainers ? '상승률' : '하락률'}</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {data.map((stock, index) => (
+                                <tr key={`${stock.name}-${stock.weekKey}-${index}`}>
+                                    <td>
+                                        <span className={`rank-badge ${isGainers ? 'gainers' : 'losers'}`}>
+                                            {getRankDisplay(index + 1)}
+                                        </span>
+                                    </td>
+                                    <td>{stock.name}</td>
+                                    <td className="text-right">{formatPrice(stock.capturePrice)}원</td>
+                                    <td className="text-right">{formatDate(stock.captureDate)}</td>
+                                    <td className="text-right">{formatPrice(stock.currentPrice)}원</td>
+                                    <td className={`text-right change-rate ${stock.changeRate >= 0 ? 'positive' : 'negative'}`}>
+                                        {formatChangeRate(stock.changeRate)}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
         </div>
     );
@@ -255,36 +257,38 @@ const Ranking = () => {
             {data.length === 0 ? (
                 <p className="empty-message">진행 중인 실매매가 없습니다.</p>
             ) : (
-                <table className="stock-table">
-                    <thead>
-                        <tr>
-                            <th>순위</th>
-                            <th>종목명</th>
-                            <th>종목코드</th>
-                            <th className="text-right">평단가</th>
-                            <th className="text-right">현재가</th>
-                            <th className="text-right">수익률</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((trade, index) => (
-                            <tr key={`${trade.id}-${index}`}>
-                                <td>
-                                    <span className="rank-badge gainers">
-                                        {getRankDisplay(index + 1)}
-                                    </span>
-                                </td>
-                                <td>{trade.stockName || '-'}</td>
-                                <td>{trade.stockCode || '-'}</td>
-                                <td className="text-right">{formatPrice(trade.basePrice)}원</td>
-                                <td className="text-right">{formatPrice(trade.currentPrice)}원</td>
-                                <td className={`text-right change-rate ${trade.profitRate >= 0 ? 'positive' : 'negative'}`}>
-                                    {formatChangeRate(trade.profitRate)}
-                                </td>
+                <div className="table-scroll-wrapper">
+                    <table className="stock-table">
+                        <thead>
+                            <tr>
+                                <th>순위</th>
+                                <th>종목명</th>
+                                <th>종목코드</th>
+                                <th className="text-right">평단가</th>
+                                <th className="text-right">현재가</th>
+                                <th className="text-right">수익률</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {data.map((trade, index) => (
+                                <tr key={`${trade.id}-${index}`}>
+                                    <td>
+                                        <span className="rank-badge gainers">
+                                            {getRankDisplay(index + 1)}
+                                        </span>
+                                    </td>
+                                    <td>{trade.stockName || '-'}</td>
+                                    <td>{trade.stockCode || '-'}</td>
+                                    <td className="text-right">{formatPrice(trade.basePrice)}원</td>
+                                    <td className="text-right">{formatPrice(trade.currentPrice)}원</td>
+                                    <td className={`text-right change-rate ${trade.profitRate >= 0 ? 'positive' : 'negative'}`}>
+                                        {formatChangeRate(trade.profitRate)}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
         </div>
     );

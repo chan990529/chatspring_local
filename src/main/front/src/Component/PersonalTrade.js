@@ -324,63 +324,65 @@ const PersonalTrade = () => {
                                 {selectedParticipant}님의 실매매 현황
                             </h3>
                             <div className="stock-table-container" style={{ marginTop: '0', padding: '0' }}>
-                                <table className="stock-table">
-                                    <thead>
-                                        <tr>
-                                            <th>종목명</th>
-                                            <th>종목코드</th>
-                                            <th>시작일</th>
-                                            <th>수익률</th>
-                                            <th>상태</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {trades.map((trade) => {
-                                            const returnRate = calculateReturnRate(trade);
-                                            const returnRateFormatted = formatReturnRate(returnRate);
-                                            const returnRateColor = returnRate != null 
-                                                ? (returnRate >= 0 ? '#ff6b6b' : '#4ecdc4')
-                                                : 'rgba(255, 255, 255, 0.7)';
-                                            
-                                            return (
-                                                <tr key={trade.id}>
-                                                    <td>{trade.stockName || '-'}</td>
-                                                    <td>{trade.stockCode || '-'}</td>
-                                                    <td>{formatDate(trade.startDate)}</td>
-                                                    <td style={{ 
-                                                        color: returnRateColor,
-                                                        fontWeight: 'bold'
-                                                    }}>
-                                                        {returnRateFormatted}
-                                                    </td>
-                                                    <td>
-                                                        <span style={{
-                                                            padding: '4px 8px',
-                                                            borderRadius: '4px',
-                                                            backgroundColor: trade.status === 'ACTIVE'
-                                                                ? 'rgba(76, 175, 80, 0.3)'
-                                                                : trade.status === 'PAUSED'
-                                                                ? 'rgba(255, 193, 7, 0.3)'
-                                                                : trade.status === 'COMPLETED'
-                                                                ? 'rgba(158, 158, 158, 0.3)'
-                                                                : 'rgba(158, 158, 158, 0.3)',
-                                                            color: '#fff',
-                                                            fontSize: '12px'
+                                <div className="table-scroll-wrapper">
+                                    <table className="stock-table">
+                                        <thead>
+                                            <tr>
+                                                <th>종목명</th>
+                                                <th>종목코드</th>
+                                                <th>시작일</th>
+                                                <th>수익률</th>
+                                                <th>상태</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {trades.map((trade) => {
+                                                const returnRate = calculateReturnRate(trade);
+                                                const returnRateFormatted = formatReturnRate(returnRate);
+                                                const returnRateColor = returnRate != null 
+                                                    ? (returnRate >= 0 ? '#ff6b6b' : '#4ecdc4')
+                                                    : 'rgba(255, 255, 255, 0.7)';
+                                                
+                                                return (
+                                                    <tr key={trade.id}>
+                                                        <td>{trade.stockName || '-'}</td>
+                                                        <td>{trade.stockCode || '-'}</td>
+                                                        <td>{formatDate(trade.startDate)}</td>
+                                                        <td style={{ 
+                                                            color: returnRateColor,
+                                                            fontWeight: 'bold'
                                                         }}>
-                                                            {trade.status === 'ACTIVE'
-                                                                ? '진행중'
-                                                                : trade.status === 'PAUSED'
-                                                                ? '중단'
-                                                                : trade.status === 'COMPLETED'
-                                                                ? '완료'
-                                                                : trade.status}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
+                                                            {returnRateFormatted}
+                                                        </td>
+                                                        <td>
+                                                            <span style={{
+                                                                padding: '4px 8px',
+                                                                borderRadius: '4px',
+                                                                backgroundColor: trade.status === 'ACTIVE'
+                                                                    ? 'rgba(76, 175, 80, 0.3)'
+                                                                    : trade.status === 'PAUSED'
+                                                                    ? 'rgba(255, 193, 7, 0.3)'
+                                                                    : trade.status === 'COMPLETED'
+                                                                    ? 'rgba(158, 158, 158, 0.3)'
+                                                                    : 'rgba(158, 158, 158, 0.3)',
+                                                                color: '#fff',
+                                                                fontSize: '12px'
+                                                            }}>
+                                                                {trade.status === 'ACTIVE'
+                                                                    ? '진행중'
+                                                                    : trade.status === 'PAUSED'
+                                                                    ? '중단'
+                                                                    : trade.status === 'COMPLETED'
+                                                                    ? '완료'
+                                                                    : trade.status}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
                                 
                                 {/* 종합수익률 표시 */}
                                 {trades.length > 0 && (() => {
