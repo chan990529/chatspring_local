@@ -52,27 +52,65 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 20px; /* 간격을 조금 더 넓혀 여유를 줍니다 */
     flex-wrap: wrap;
 }
 
+/* 세련된 글래스모피즘 버튼 스타일 */
 .dashboard-link {
+    position: relative;
     display: inline-block;
-    padding: clamp(6px, 1.2vw, 12px) clamp(12px, 2.4vw, 30px);
-    font-size: clamp(0.8rem, 1.4vw, 1.1rem);
-    font-weight: bold;
-    color: #fff;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50px;
+
+    /* 반응형 패딩과 폰트 사이즈 (가독성을 위해 조금 더 키움) */
+    padding: clamp(10px, 1.5vw, 14px) clamp(24px, 3vw, 40px);
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    font-weight: 600; /* 폰트 두께감을 주어 주목도 상승 */
+    letter-spacing: 1px; /* 자간을 넓혀 세련된 느낌 */
+
+    color: #ffffff;
     text-decoration: none;
-    transition: background-color 0.3s, transform 0.2s;
-    margin: 0;
+
+    /* 유리 효과 배경 (투명도 조절) */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px); /* 배경 흐림 효과 */
+    -webkit-backdrop-filter: blur(10px); /* 사파리 호환 */
+
+    /* 얇고 은은한 테두리 */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px; /* 둥근 알약 모양 */
+
+    /* 부드러운 그림자 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    /* 부드러운 움직임 전환 */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    /* 넘침 방지 (Glow 효과가 잘리지 않도록 마진 확보가 필요할 수 있음) */
+    margin: 5px;
 }
 
+/* 호버(마우스 올렸을 때) 효과 */
 .dashboard-link:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-    transform: translateY(-2px);
+    /* 배경이 조금 더 밝아짐 */
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.6);
+
+    /* 위로 살짝 떠오르는 느낌 */
+    transform: translateY(-3px) scale(1.02);
+
+    /* 빛나는 광채(Glow) 효과 추가 */
+    box-shadow:
+            0 10px 20px rgba(0, 0, 0, 0.2),
+            0 0 15px rgba(255, 255, 255, 0.4); /* 흰색 외곽 발광 */
+
+    /* 텍스트도 살짝 빛나게 */
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+/* 클릭 시 효과 */
+.dashboard-link:active {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* clamp로 반응형을 처리하므로 별도 미디어쿼리 제거 */
