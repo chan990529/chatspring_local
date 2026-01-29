@@ -614,7 +614,7 @@ const AdminPage = () => {
 
             {/* 멤버 리스트 */}
             <div className="stock-table-container" style={{ marginTop: '20px' }}>
-                <h2>멤버 리스트</h2>
+                <h2>멤버 리스트 (총 {memberList.length}명)</h2>
 
                 {loadingMemberList ? (
                     <div style={{ padding: '20px', textAlign: 'center', color: '#fff' }}>
