@@ -188,6 +188,16 @@ public class UserService {
     }
 
     /**
+     * 승인된 멤버 목록만 조회 (관리자용) - isApproved가 false인 회원은 제외
+     * @return 승인된 사용자 목록 (isApproved == true 또는 null)
+     */
+    public java.util.List<User> findApprovedMembers() {
+        return userRepository.findAll().stream()
+                .filter(user -> !Boolean.FALSE.equals(user.getIsApproved()))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    /**
      * 닉네임 변경 요청 목록 조회 (관리자용)
      * @return requestedNickname이 null이 아닌 모든 사용자 목록
      */

@@ -325,7 +325,7 @@ public class UserController {
                         .body(Map.of("success", false, "error", "관리자 권한이 필요합니다."));
             }
 
-            java.util.List<User> users = userService.findAllMembers();
+            java.util.List<User> users = userService.findApprovedMembers();
 
             java.util.List<Map<String, Object>> memberList = users.stream()
                     .map(user -> {
