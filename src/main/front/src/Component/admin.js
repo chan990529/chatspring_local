@@ -615,9 +615,6 @@ const AdminPage = () => {
             {/* 멤버 리스트 */}
             <div className="stock-table-container" style={{ marginTop: '20px' }}>
                 <h2>멤버 리스트</h2>
-                <p style={{ marginBottom: '15px', color: 'rgba(255, 255, 255, 0.8)' }}>
-                    가입된 모든 멤버 목록입니다.
-                </p>
 
                 {loadingMemberList ? (
                     <div style={{ padding: '20px', textAlign: 'center', color: '#fff' }}>
@@ -801,9 +798,6 @@ const AdminPage = () => {
 
             <div className="stock-table-container" style={{ marginTop: '20px' }}>
                 <h2>실매매 등록</h2>
-                <p style={{ marginBottom: '15px', color: 'rgba(255, 255, 255, 0.8)' }}>
-                    주곳리스트에 있는 종목 중 실제 매매를 시작할 종목을 등록합니다.
-                </p>
 
                 {/* 종목 선택 */}
                 <div style={{ marginBottom: '15px' }}>
@@ -982,9 +976,6 @@ const AdminPage = () => {
             {/* 실매매 리스트 관리 */}
             <div className="stock-table-container" style={{ marginTop: '20px' }}>
                 <h2>실매매 리스트 관리</h2>
-                <p style={{ marginBottom: '15px', color: 'rgba(255, 255, 255, 0.8)' }}>
-                    현재 활성화된 실매매 종목 목록입니다. 진행 중인 항목은 중단할 수 있고, 중단된 항목은 재개할 수 있습니다. 완료된 항목은 완료 처리하고, 잘못 등록된 항목은 삭제할 수 있습니다.
-                </p>
 
                 {loadingRealTradeList ? (
                     <div style={{ padding: '20px', textAlign: 'center', color: '#fff' }}>
@@ -1136,9 +1127,6 @@ const AdminPage = () => {
             {/* 회원가입 승인 요청 목록 */}
             <div className="stock-table-container" style={{ marginTop: '20px' }}>
                 <h2>회원가입 승인 요청 목록</h2>
-                <p style={{ marginBottom: '15px', color: 'rgba(255, 255, 255, 0.8)' }}>
-                    회원가입 요청을 승인하거나 거절할 수 있습니다. 거절 시 해당 회원 정보는 삭제됩니다.
-                </p>
 
                 {loadingSignupRequests ? (
                     <p style={{ color: '#fff', textAlign: 'center' }}>로딩 중...</p>
@@ -1210,9 +1198,6 @@ const AdminPage = () => {
             {/* 닉네임 변경 요청 목록 */}
             <div className="stock-table-container" style={{ marginTop: '20px' }}>
                 <h2>닉네임 변경 요청 목록</h2>
-                <p style={{ marginBottom: '15px', color: 'rgba(255, 255, 255, 0.8)' }}>
-                    사용자들의 닉네임 변경 요청을 승인하거나 거절할 수 있습니다.
-                </p>
 
                 {loadingNicknameRequests ? (
                     <p style={{ color: '#fff', textAlign: 'center' }}>로딩 중...</p>
