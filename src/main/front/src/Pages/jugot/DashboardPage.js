@@ -185,6 +185,37 @@ const DashboardPage = () => {
     };
 
     const renderContent = () => {
+        // 로그인하지 않았으면 콘텐츠 대신 로그인 유도 메시지 표시
+        if (!isLoggedIn) {
+            return (
+                <div className="login-required-content" style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: '400px',
+                    padding: '40px 20px',
+                    textAlign: 'center'
+                }}>
+                    <p style={{
+                        fontSize: '18px',
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        marginBottom: '24px',
+                        lineHeight: '1.6'
+                    }}>
+                        주곳을 보려면<br />로그인이 필요합니다.
+                    </p>
+                    <button
+                        onClick={() => setIsAuthModalOpen(true)}
+                        className="glass-btn btn-accent"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                    >
+                        <Icons.Login />
+                        <span>로그인</span>
+                    </button>
+                </div>
+            );
+        }
         switch (activeTab) {
             case '주곳리스트': return <JugotList key={`jugot-${refreshKey}`} />;
             case '등락랭킹':   return <Ranking key={`ranking-${refreshKey}`} />;
@@ -242,7 +273,7 @@ const DashboardPage = () => {
             </div>
             <Navigator activeTab={activeTab} setActiveTab={setActiveTab} />
             <main className="content">{renderContent()}</main>
-            <RefreshableGrid onRefresh={handleRefresh} />
+            {isLoggedIn && <RefreshableGrid onRefresh={handleRefresh} />}
             <AuthModal
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
