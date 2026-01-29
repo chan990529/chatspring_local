@@ -172,6 +172,14 @@ public class UserService {
     }
 
     /**
+     * 전체 멤버 목록 조회 (관리자용)
+     * @return 모든 사용자 목록
+     */
+    public java.util.List<User> findAllMembers() {
+        return userRepository.findAll();
+    }
+
+    /**
      * 닉네임 변경 요청 목록 조회 (관리자용)
      * @return requestedNickname이 null이 아닌 모든 사용자 목록
      */

@@ -311,6 +311,46 @@ public class UserController {
     }
 
     /**
+     * 전체 멤버 목록 조회 (관리자용)
+     */
+    @GetMapping("/admin/members")
+    public ResponseEntity<?> getAllMembers(
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (!isAdmin(userPrincipal)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("success", false, "error", "관리자 권한이 필요합니다."));
+            }
+
+            java.util.List<User> users = userService.findAllMembers();
+
+            java.util.List<Map<String, Object>> memberList = users.stream()
+                    .map(user -> {
+                        Map<String, Object> info = new HashMap<>();
+                        info.put("id", user.getId());
+                        info.put("username", user.getUsername());
+                        info.put("nickname", user.getNickname());
+                        info.put("role", user.getRole());
+                        info.put("createdAt", user.getCreatedAt() != null ? user.getCreatedAt().toString() : null);
+                        return info;
+                    })
+                    .collect(java.util.stream.Collectors.toList());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("members", memberList);
+            response.put("count", memberList.size());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "멤버 목록 조회 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
      * 닉네임 변경 요청 목록 조회 (관리자용)
      */
     @GetMapping("/admin/nickname-requests")

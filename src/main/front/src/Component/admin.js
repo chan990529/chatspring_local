@@ -37,6 +37,10 @@ const AdminPage = () => {
     const [approvingId, setApprovingId] = useState(null);
     const [rejectingId, setRejectingId] = useState(null);
 
+    // 멤버 리스트 관련 상태
+    const [memberList, setMemberList] = useState([]);
+    const [loadingMemberList, setLoadingMemberList] = useState(false);
+
     useEffect(() => {
         // 권한 검증
         const checkAdminAccess = async () => {
@@ -172,11 +176,30 @@ const AdminPage = () => {
         }
     };
 
-    // 컴포넌트 마운트 시 실매매 리스트 조회
+    // 멤버 리스트 조회 (관리자용)
+    const fetchMemberList = async () => {
+        setLoadingMemberList(true);
+        try {
+            const response = await axios.get(`${config.API_BASE_URL}/api/user/admin/members`, {
+                withCredentials: true
+            });
+            if (response.data.success) {
+                setMemberList(response.data.members || []);
+            }
+        } catch (err) {
+            console.error('멤버 리스트 조회 오류:', err);
+            setMemberList([]);
+        } finally {
+            setLoadingMemberList(false);
+        }
+    };
+
+    // 컴포넌트 마운트 시 실매매 리스트, 닉네임 요청, 멤버 리스트 조회
     useEffect(() => {
         if (userInfo) {
             fetchRealTradeList();
             fetchNicknameRequests();
+            fetchMemberList();
         }
     }, [userInfo]);
 
@@ -509,6 +532,73 @@ const AdminPage = () => {
                 <p>환영합니다, {userInfo?.nickname}님!</p>
                 <p>사용자명: {userInfo?.username}</p>
                 <p>권한: {userInfo?.role}</p>
+            </div>
+
+            {/* 멤버 리스트 */}
+            <div className="stock-table-container" style={{ marginTop: '20px' }}>
+                <h2>멤버 리스트</h2>
+                <p style={{ marginBottom: '15px', color: 'rgba(255, 255, 255, 0.8)' }}>
+                    가입된 모든 멤버 목록입니다.
+                </p>
+
+                {loadingMemberList ? (
+                    <div style={{ padding: '20px', textAlign: 'center', color: '#fff' }}>
+                        로딩 중...
+                    </div>
+                ) : memberList.length === 0 ? (
+                    <div style={{
+                        padding: '20px',
+                        textAlign: 'center',
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        borderRadius: '8px'
+                    }}>
+                        등록된 멤버가 없습니다.
+                    </div>
+                ) : (
+                    <div style={{
+                        maxHeight: '400px',
+                        overflowY: 'auto',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '8px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                    }}>
+                        <table className="stock-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>사용자명</th>
+                                    <th>닉네임</th>
+                                    <th>권한</th>
+                                    <th>가입일시</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {memberList.map((member) => (
+                                    <tr key={member.id}>
+                                        <td>{member.id}</td>
+                                        <td>{member.username}</td>
+                                        <td>{member.nickname}</td>
+                                        <td>
+                                            <span style={{
+                                                padding: '4px 8px',
+                                                borderRadius: '4px',
+                                                backgroundColor: member.role === 'pingddak'
+                                                    ? 'rgba(255, 152, 0, 0.3)'
+                                                    : 'rgba(158, 158, 158, 0.3)',
+                                                color: '#fff',
+                                                fontSize: '12px'
+                                            }}>
+                                                {member.role === 'pingddak' ? '관리자' : member.role || 'USER'}
+                                            </span>
+                                        </td>
+                                        <td>{member.createdAt ? new Date(member.createdAt).toLocaleString('ko-KR') : '-'}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
             
             <div className="stock-table-container">
