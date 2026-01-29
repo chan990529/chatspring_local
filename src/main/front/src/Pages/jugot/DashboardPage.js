@@ -205,14 +205,6 @@ const DashboardPage = () => {
                     }}>
                         주곳을 보려면<br />로그인이 필요합니다.
                     </p>
-                    <button
-                        onClick={() => setIsAuthModalOpen(true)}
-                        className="glass-btn btn-accent"
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-                    >
-                        <Icons.Login />
-                        <span>로그인</span>
-                    </button>
                 </div>
             );
         }
