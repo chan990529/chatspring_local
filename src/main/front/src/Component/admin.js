@@ -566,8 +566,6 @@ const AdminPage = () => {
                         <table className="stock-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>사용자명</th>
                                     <th>닉네임</th>
                                     <th>권한</th>
                                     <th>가입일시</th>
@@ -576,8 +574,6 @@ const AdminPage = () => {
                             <tbody>
                                 {memberList.map((member) => (
                                     <tr key={member.id}>
-                                        <td>{member.id}</td>
-                                        <td>{member.username}</td>
                                         <td>{member.nickname}</td>
                                         <td>
                                             <span style={{
@@ -589,7 +585,7 @@ const AdminPage = () => {
                                                 color: '#fff',
                                                 fontSize: '12px'
                                             }}>
-                                                {member.role === 'pingddak' ? '관리자' : member.role || 'USER'}
+                                                {member.role === 'pingddak' ? '관리자' : '사용자'}
                                             </span>
                                         </td>
                                         <td>{member.createdAt ? new Date(member.createdAt).toLocaleString('ko-KR') : '-'}</td>
