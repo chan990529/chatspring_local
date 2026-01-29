@@ -32,12 +32,16 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-
+    @Column(name = "is_approved")
+    private Boolean isApproved; // 회원가입 승인 여부 (관리자 승인 후 true)
 
     @PrePersist
     protected void onCreate() {
         if (role == null || role.isEmpty()) {
             role = "USER";
+        }
+        if (isApproved == null) {
+            isApproved = false; // 일반 가입은 무조건 승인 대기
         }
         createdAt = LocalDateTime.now();
     }
@@ -105,6 +109,14 @@ public class User {
 
     public void setIntroductionLink(String introductionLink) {
         this.introductionLink = introductionLink;
+    }
+
+    public Boolean getIsApproved() {
+        return isApproved;
+    }
+
+    public void setIsApproved(Boolean isApproved) {
+        this.isApproved = isApproved;
     }
 }
 

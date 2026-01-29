@@ -39,7 +39,7 @@ public class UserController {
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "회원가입이 완료되었습니다.");
+            response.put("message", "회원가입 요청이 접수되었습니다.");
             response.put("username", savedUser.getUsername());
             response.put("nickname", savedUser.getNickname());
 
@@ -102,6 +102,9 @@ public class UserController {
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("success", false);
             responseBody.put("error", e.getMessage());
+            if (e.getMessage() != null && e.getMessage().contains("승인")) {
+                responseBody.put("errorCode", "PENDING_APPROVAL");
+            }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
         } catch (Exception e) {
             Map<String, Object> responseBody = new HashMap<>();
@@ -346,6 +349,114 @@ public class UserController {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
             response.put("error", "멤버 목록 조회 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * 회원가입 승인 대기 목록 조회 (관리자용)
+     */
+    @GetMapping("/admin/signup-requests")
+    public ResponseEntity<?> getSignupRequests(
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (!isAdmin(userPrincipal)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("success", false, "error", "관리자 권한이 필요합니다."));
+            }
+
+            java.util.List<User> users = userService.getPendingUsers();
+
+            java.util.List<Map<String, Object>> requestList = users.stream()
+                    .map(user -> {
+                        Map<String, Object> userInfo = new HashMap<>();
+                        userInfo.put("id", user.getId());
+                        userInfo.put("username", user.getUsername());
+                        userInfo.put("nickname", user.getNickname());
+                        userInfo.put("createdAt", user.getCreatedAt() != null ? user.getCreatedAt().toString() : null);
+                        return userInfo;
+                    })
+                    .collect(java.util.stream.Collectors.toList());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("requests", requestList);
+            response.put("count", requestList.size());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "회원가입 요청 목록 조회 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * 회원가입 승인 (관리자용)
+     */
+    @PutMapping("/admin/signup-requests/{userId}/approve")
+    public ResponseEntity<?> approveSignup(
+            @PathVariable Long userId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (!isAdmin(userPrincipal)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("success", false, "error", "관리자 권한이 필요합니다."));
+            }
+
+            User updatedUser = userService.approveUser(userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "회원가입이 승인되었습니다.");
+            response.put("userId", updatedUser.getId());
+            response.put("username", updatedUser.getUsername());
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "회원가입 승인 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * 회원가입 거절 - 회원 정보 삭제 (관리자용)
+     */
+    @DeleteMapping("/admin/signup-requests/{userId}/reject")
+    public ResponseEntity<?> rejectSignup(
+            @PathVariable Long userId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            if (!isAdmin(userPrincipal)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("success", false, "error", "관리자 권한이 필요합니다."));
+            }
+
+            userService.rejectUser(userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "회원가입 요청이 거절(삭제)되었습니다.");
+            response.put("userId", userId);
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "회원가입 거절 중 오류가 발생했습니다.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

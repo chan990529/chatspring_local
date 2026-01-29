@@ -44,12 +44,15 @@ public class UserService {
 
         // 비밀번호 암호화
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        
+
         // 권한이 설정되지 않았으면 기본값 설정
         if (user.getRole() == null || user.getRole().isEmpty()) {
             user.setRole("USER");
         }
-        
+
+        // 회원가입 시 승인 대기 상태로 저장
+        user.setIsApproved(false);
+
         return userRepository.save(user);
     }
 
@@ -59,6 +62,11 @@ public class UserService {
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("아이디 또는 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 승인되지 않은 회원은 로그인 불가
+        if (Boolean.FALSE.equals(user.getIsApproved())) {
+            throw new RuntimeException("관리자의 승인을 기다리는 중입니다.");
         }
 
         return user;
@@ -225,6 +233,38 @@ public class UserService {
         user.setRequestedNickname(null);
 
         return userRepository.save(user);
+    }
+
+    /**
+     * 승인 대기 중인 회원 목록 조회 (관리자용)
+     * @return isApproved == false 인 회원 목록
+     */
+    public java.util.List<User> getPendingUsers() {
+        return userRepository.findByIsApprovedFalse();
+    }
+
+    /**
+     * 회원가입 승인 (관리자용)
+     * @param userId 승인할 사용자 ID
+     * @return 업데이트된 User 객체
+     */
+    public User approveUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        user.setIsApproved(true);
+        return userRepository.save(user);
+    }
+
+    /**
+     * 회원가입 거절 - 해당 회원 정보 삭제 (관리자용)
+     * @param userId 거절할 사용자 ID
+     */
+    public void rejectUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        userRepository.delete(user);
     }
 }
 

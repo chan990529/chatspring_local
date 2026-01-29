@@ -37,6 +37,12 @@ const AdminPage = () => {
     const [approvingId, setApprovingId] = useState(null);
     const [rejectingId, setRejectingId] = useState(null);
 
+    // 회원가입 승인 요청 관련 상태
+    const [signupRequests, setSignupRequests] = useState([]);
+    const [loadingSignupRequests, setLoadingSignupRequests] = useState(false);
+    const [approvingSignupId, setApprovingSignupId] = useState(null);
+    const [rejectingSignupId, setRejectingSignupId] = useState(null);
+
     // 멤버 리스트 관련 상태
     const [memberList, setMemberList] = useState([]);
     const [loadingMemberList, setLoadingMemberList] = useState(false);
@@ -194,14 +200,86 @@ const AdminPage = () => {
         }
     };
 
-    // 컴포넌트 마운트 시 실매매 리스트, 닉네임 요청, 멤버 리스트 조회
+    // 컴포넌트 마운트 시 실매매 리스트, 닉네임 요청, 멤버 리스트, 회원가입 승인 요청 조회
     useEffect(() => {
         if (userInfo) {
             fetchRealTradeList();
             fetchNicknameRequests();
             fetchMemberList();
+            fetchSignupRequests();
         }
     }, [userInfo]);
+
+    // 회원가입 승인 요청 목록 조회
+    const fetchSignupRequests = async () => {
+        setLoadingSignupRequests(true);
+        try {
+            const response = await axios.get(`${config.API_BASE_URL}/api/user/admin/signup-requests`, {
+                withCredentials: true
+            });
+            if (response.data.success) {
+                setSignupRequests(response.data.requests || []);
+            }
+        } catch (err) {
+            console.error('회원가입 승인 요청 목록 조회 오류:', err);
+            setSignupRequests([]);
+        } finally {
+            setLoadingSignupRequests(false);
+        }
+    };
+
+    // 회원가입 승인
+    const handleApproveSignup = async (userId) => {
+        if (!window.confirm('회원가입을 승인하시겠습니까?')) {
+            return;
+        }
+
+        setApprovingSignupId(userId);
+        try {
+            const response = await axios.put(
+                `${config.API_BASE_URL}/api/user/admin/signup-requests/${userId}/approve`,
+                {},
+                { withCredentials: true }
+            );
+
+            if (response.data.success) {
+                alert('승인되었습니다.');
+                fetchSignupRequests();
+                fetchMemberList();
+            }
+        } catch (err) {
+            console.error('회원가입 승인 오류:', err);
+            alert(err.response?.data?.error || '회원가입 승인 중 오류가 발생했습니다.');
+        } finally {
+            setApprovingSignupId(null);
+        }
+    };
+
+    // 회원가입 거절(삭제)
+    const handleRejectSignup = async (userId) => {
+        if (!window.confirm('회원가입 요청을 거절(삭제)하시겠습니까?')) {
+            return;
+        }
+
+        setRejectingSignupId(userId);
+        try {
+            const response = await axios.delete(
+                `${config.API_BASE_URL}/api/user/admin/signup-requests/${userId}/reject`,
+                { withCredentials: true }
+            );
+
+            if (response.data.success) {
+                alert('거절(삭제)되었습니다.');
+                fetchSignupRequests();
+                fetchMemberList();
+            }
+        } catch (err) {
+            console.error('회원가입 거절 오류:', err);
+            alert(err.response?.data?.error || '회원가입 거절 중 오류가 발생했습니다.');
+        } finally {
+            setRejectingSignupId(null);
+        }
+    };
 
     // 닉네임 변경 요청 목록 조회
     const fetchNicknameRequests = async () => {
@@ -1044,6 +1122,80 @@ const AdminPage = () => {
                                                     }}
                                                 >
                                                     {deletingId === trade.id ? '삭제 중...' : '삭제'}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+
+            {/* 회원가입 승인 요청 목록 */}
+            <div className="stock-table-container" style={{ marginTop: '20px' }}>
+                <h2>회원가입 승인 요청 목록</h2>
+                <p style={{ marginBottom: '15px', color: 'rgba(255, 255, 255, 0.8)' }}>
+                    회원가입 요청을 승인하거나 거절할 수 있습니다. 거절 시 해당 회원 정보는 삭제됩니다.
+                </p>
+
+                {loadingSignupRequests ? (
+                    <p style={{ color: '#fff', textAlign: 'center' }}>로딩 중...</p>
+                ) : signupRequests.length === 0 ? (
+                    <p style={{ color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center', padding: '20px' }}>
+                        현재 회원가입 승인 대기 중인 요청이 없습니다.
+                    </p>
+                ) : (
+                    <div style={{ overflowX: 'auto' }}>
+                        <table className="stock-table">
+                            <thead>
+                                <tr>
+                                    <th>아이디</th>
+                                    <th>닉네임</th>
+                                    <th>가입요청일시</th>
+                                    <th>작업</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {signupRequests.map((request) => (
+                                    <tr key={request.id}>
+                                        <td>{request.username}</td>
+                                        <td>{request.nickname}</td>
+                                        <td>{request.createdAt ? new Date(request.createdAt).toLocaleString('ko-KR') : '-'}</td>
+                                        <td>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                <button
+                                                    onClick={() => handleApproveSignup(request.id)}
+                                                    disabled={approvingSignupId === request.id || rejectingSignupId === request.id}
+                                                    style={{
+                                                        padding: '5px 10px',
+                                                        backgroundColor: 'rgba(76, 175, 80, 0.3)',
+                                                        border: '1px solid rgba(76, 175, 80, 0.5)',
+                                                        borderRadius: '4px',
+                                                        color: '#fff',
+                                                        cursor: (approvingSignupId === request.id || rejectingSignupId === request.id) ? 'not-allowed' : 'pointer',
+                                                        opacity: (approvingSignupId === request.id || rejectingSignupId === request.id) ? 0.6 : 1,
+                                                        fontSize: '12px'
+                                                    }}
+                                                >
+                                                    {approvingSignupId === request.id ? '승인 중...' : '승인'}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleRejectSignup(request.id)}
+                                                    disabled={rejectingSignupId === request.id || approvingSignupId === request.id}
+                                                    style={{
+                                                        padding: '5px 10px',
+                                                        backgroundColor: 'rgba(244, 67, 54, 0.3)',
+                                                        border: '1px solid rgba(244, 67, 54, 0.5)',
+                                                        borderRadius: '4px',
+                                                        color: '#fff',
+                                                        cursor: (rejectingSignupId === request.id || approvingSignupId === request.id) ? 'not-allowed' : 'pointer',
+                                                        opacity: (rejectingSignupId === request.id || approvingSignupId === request.id) ? 0.6 : 1,
+                                                        fontSize: '12px'
+                                                    }}
+                                                >
+                                                    {rejectingSignupId === request.id ? '거절 중...' : '거절'}
                                                 </button>
                                             </div>
                                         </td>

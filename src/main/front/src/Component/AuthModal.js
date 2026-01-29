@@ -146,7 +146,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                 );
 
                 if (response.data.success) {
-                    alert('회원가입이 완료되었습니다. 로그인해주세요.');
+                    alert('회원가입 요청이 접수되었습니다. 관리자 승인 후 로그인할 수 있습니다.');
                     setIsLogin(true);
                     setFormData({ username: '', password: '', passwordConfirm: '', nickname: '' });
                     setValidationErrors({ username: '', password: '', passwordConfirm: '', nickname: '' });
@@ -156,12 +156,23 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
             const errorData = err.response?.data;
             const errorCode = errorData?.errorCode;
             const errorMessage = errorData?.error || '오류가 발생했습니다.';
-            
-            // 닉네임 중복인 경우 알림창 표시
-            if (errorCode === 'NICKNAME_DUPLICATE') {
-                alert('이미 존재하는 닉네임입니다. 다른 닉네임을 사용해주세요.');
+
+            if (isLogin) {
+                // 로그인 실패: 승인 대기인 경우 별도 메시지
+                if (errorCode === 'PENDING_APPROVAL') {
+                    setError('승인 대기 중입니다.');
+                } else {
+                    setError(errorMessage);
+                }
             } else {
-                setError(errorMessage);
+                // 회원가입 실패: 닉네임 중복인 경우 알림창 표시
+                if (errorCode === 'NICKNAME_DUPLICATE') {
+                    alert('이미 존재하는 닉네임입니다. 다른 닉네임을 사용해주세요.');
+                } else if (errorCode === 'USERNAME_DUPLICATE') {
+                    setError(errorMessage);
+                } else {
+                    setError(errorMessage);
+                }
             }
         } finally {
             setLoading(false);
