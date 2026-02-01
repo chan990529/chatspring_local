@@ -66,6 +66,14 @@ const StockTable = ({ title, data }) => {
                     return sortConfig.direction === 'ascending' ? comparison : -comparison;
                 }
 
+                // null/undefined/빈 값은 최후순위로 (현재가, 최고가, 최저가 등 값이 없을 수 있는 필드)
+                const isEmpty = (v) => v === null || v === undefined || v === '';
+                const emptyA = isEmpty(valA);
+                const emptyB = isEmpty(valB);
+                if (emptyA && emptyB) return 0;
+                if (emptyA) return 1;   // a를 뒤로
+                if (emptyB) return -1; // b를 뒤로
+
                 // 값이 숫자인지 문자인지에 따라 다른 비교 로직을 사용합니다.
                 if (typeof valA === 'number' && typeof valB === 'number') {
                     if (valA < valB) {
@@ -76,7 +84,7 @@ const StockTable = ({ title, data }) => {
                     }
                 } else {
                     // 문자열 비교
-                    const comparison = valA.toString().localeCompare(valB.toString());
+                    const comparison = String(valA).localeCompare(String(valB));
                     return sortConfig.direction === 'ascending' ? comparison : -comparison;
                 }
                 return 0;
