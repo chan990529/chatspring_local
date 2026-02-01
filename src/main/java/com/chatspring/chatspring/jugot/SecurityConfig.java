@@ -63,8 +63,8 @@ public class SecurityConfig {
                     "/api/jugot/realtrade/**",
                     "/api/jugot/realtrade/admin"
                 ).authenticated()
-                // 기타 모든 요청은 인증 불필요
-                .anyRequest().permitAll()
+                // 기타 모든 요청은 인증 필요 (Fail Safe: 명시적으로 허용하지 않은 경로는 차단)
+                .anyRequest().authenticated()
             )
             
             // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
